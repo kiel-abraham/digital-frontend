@@ -13,52 +13,49 @@ import {
   DropdownItem
 } from "reactstrap";
 
-class Bar extends React.Component {
+export default class Bar extends React.Component {
   constructor(props) {
     super(props);
 
-    this.toggleNavbar = this.toggleNavbar.bind(this);
+    this.toggle = this.toggle.bind(this);
     this.state = {
-      collapsed: true
+      isOpen: false
     };
   }
-
-  toggleNavbar() {
+  toggle() {
     this.setState({
-      collapsed: !this.state.collapsed
+      isOpen: !this.state.isOpen
     });
   }
-
   render() {
     return (
-      <Navbar color="dark" dark>
-        <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
-        <NavbarBrand href="/" className="mr-auto">
-          Digital Downloads
-        </NavbarBrand>
-        <Collapse isOpen={!this.state.collapsed} navbar>
-          <Nav navbar>
-            <NavItem>
-              <NavLink href="#">Logout</NavLink>
-            </NavItem>
-          </Nav>
-        </Collapse>
-        <Nav navbar>
-          <UncontrolledDropdown nav inNavbar>
-            <DropdownToggle nav caret>
-              Support
-            </DropdownToggle>
-            <DropdownMenu right>
-              <DropdownItem>Option 1</DropdownItem>
-              <DropdownItem>Option 2</DropdownItem>
-              <DropdownItem divider />
-              <DropdownItem>Reset</DropdownItem>
-            </DropdownMenu>
-          </UncontrolledDropdown>
-        </Nav>
-      </Navbar>
+      <div>
+        <Navbar color="dark" dark expand="md">
+          <NavbarBrand href="/">Digital</NavbarBrand>
+          <NavbarToggler onClick={this.toggle} />
+          <Collapse isOpen={this.state.isOpen} navbar>
+            <Nav className="ml-auto" navbar>
+              <UncontrolledDropdown nav inNavbar>
+                <DropdownToggle nav caret>
+                  Support
+                </DropdownToggle>
+                <DropdownMenu right>
+                  <DropdownItem>
+                    Option 1
+                  </DropdownItem>
+                  <DropdownItem>
+                    Option 2
+                  </DropdownItem>
+                  <DropdownItem divider />
+                  <DropdownItem>
+                    Submit Ticket
+                  </DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
+            </Nav>
+          </Collapse>
+        </Navbar>
+      </div>
     );
   }
 }
-
-export default Bar;
