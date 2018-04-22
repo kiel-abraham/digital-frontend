@@ -6,7 +6,11 @@ import {
   NavbarBrand,
   Nav,
   NavItem,
-  NavLink
+  NavLink,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem
 } from "reactstrap";
 
 class Bar extends React.Component {
@@ -28,7 +32,7 @@ class Bar extends React.Component {
   render() {
     return (
       <Navbar color="dark" dark>
-      <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
+        <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
         <NavbarBrand href="/" className="mr-auto">
           Digital Downloads
         </NavbarBrand>
@@ -39,6 +43,19 @@ class Bar extends React.Component {
             </NavItem>
           </Nav>
         </Collapse>
+        <Nav navbar>
+          <UncontrolledDropdown nav inNavbar>
+            <DropdownToggle nav caret>
+              Support
+            </DropdownToggle>
+            <DropdownMenu right>
+              <DropdownItem>Option 1</DropdownItem>
+              <DropdownItem>Option 2</DropdownItem>
+              <DropdownItem divider />
+              <DropdownItem>Reset</DropdownItem>
+            </DropdownMenu>
+          </UncontrolledDropdown>
+        </Nav>
       </Navbar>
     );
   }
