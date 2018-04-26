@@ -16,6 +16,10 @@ const Main = () => (
       <Route path="/email" component={Email} />
       <Route path="/settings" component={Settings} />
     </Switch>
+    <footer className="mt-5">
+      <hr />
+      <p className="text-center text-muted">&copy; 2018</p>
+    </footer>
   </Col>
 );
 

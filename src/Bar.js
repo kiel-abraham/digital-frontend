@@ -41,14 +41,11 @@ export default class Bar extends React.Component {
                 </DropdownToggle>
                 <DropdownMenu right>
                   <DropdownItem>
-                    Option 1
-                  </DropdownItem>
-                  <DropdownItem>
-                    Option 2
+                    Docs
                   </DropdownItem>
                   <DropdownItem divider />
                   <DropdownItem>
-                    Submit Ticket
+                    Report Issue
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>

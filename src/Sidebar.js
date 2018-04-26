@@ -18,23 +18,23 @@ const Sidebar = () => (
             </Link>
           </NavItem>
           <NavItem>
-          <Link to="/orders" className="nav-link">
-          Orders
-          </Link>
+            <Link to="/orders" className="nav-link">
+              Orders
+            </Link>
           </NavItem>
           <NavItem>
-          <Link to="/email" className="nav-link">
-          Email
-          </Link>
+            <Link to="/email" className="nav-link">
+              Email
+            </Link>
           </NavItem>
           <NavItem>
-          <Link to="/settings" className="nav-link">
-          Settings
-          </Link>
+            <Link to="/settings" className="nav-link">
+              Settings
+            </Link>
           </NavItem>
           <hr />
           <NavItem>
-          <NavLink>Logout</NavLink>
+            <NavLink>Logout</NavLink>
           </NavItem>
         </Nav>
       </nav>
