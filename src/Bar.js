@@ -31,22 +31,18 @@ export default class Bar extends React.Component {
     return (
       <div>
         <Navbar color="dark" dark expand="md">
-          <NavbarBrand href="/">Digital</NavbarBrand>
+          <NavbarBrand href="/">NetoFY</NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>
-                  Support
+                  Digital Downloads
                 </DropdownToggle>
                 <DropdownMenu right>
-                  <DropdownItem>
-                    Docs
-                  </DropdownItem>
+                  <DropdownItem>Switch App</DropdownItem>
                   <DropdownItem divider />
-                  <DropdownItem>
-                    Report Issue
-                  </DropdownItem>
+                  <DropdownItem>Report Issue</DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
             </Nav>

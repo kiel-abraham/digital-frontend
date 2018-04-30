@@ -1,18 +1,6 @@
 import React from "react";
-import {
-  Table,
-  Button,
-  ButtonDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Row,
-  Col,
-  Form,
-  FormGroup,
-  Label,
-  Input
-} from "reactstrap";
+import OrderItem from "./OrderItem";
+import { Table, Row, Col, Form, FormGroup, Label, Input } from "reactstrap";
 
 class Orders extends React.Component {
   constructor(props) {
@@ -30,7 +18,34 @@ class Orders extends React.Component {
     });
   }
 
+  handleFilter(event) {
+    console.log(event.target.value);
+  }
+
   render() {
+    let orderList = [
+      {
+        orderId: "1001",
+        sku: "1",
+        date: "12/01/2018",
+        downloaded: true,
+        active: false
+      },
+      {
+        orderId: "1002",
+        sku: "2",
+        date: "13/01/2018",
+        downloaded: false,
+        active: true
+      },
+      {
+        orderId: "1003",
+        sku: "3",
+        date: "14/01/2018",
+        downloaded: false,
+        active: true
+      }
+    ];
     return (
       <div>
         <h1 className="mb-5">Orders</h1>
@@ -38,19 +53,17 @@ class Orders extends React.Component {
           <Col>
             <Form inline>
               <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-                <Label for="search" className="mr-sm-2">
-                  Search
+                <Label for="filer" className="mr-sm-2">
+                  Filter
                 </Label>
                 <Input
                   type="text"
-                  name="search"
-                  id="search"
-                  placeholder="Search for an order"
+                  name="filter"
+                  id="filter"
+                  onKeyUp={this.handleFilter.bind(this)}
+                  placeholder="Filter using an order ID"
                 />
               </FormGroup>
-              <Button outline color="primary">
-                Search
-              </Button>
             </Form>
           </Col>
         </Row>
@@ -65,47 +78,16 @@ class Orders extends React.Component {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">1003</th>
-              <td>2</td>
-              <td>12/04/2018</td>
-              <td>No</td>
-              <td>
-                <Button color="primary" size="sm">
-                  Active
-                </Button>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">1002</th>
-              <td>1</td>
-              <td>10/04/2018</td>
-              <td>Yes</td>
-              <td>
-                <Button color="primary" size="sm">
-                  Active
-                </Button>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">1001</th>
-              <td>3</td>
-              <td>09/04/2018</td>
-              <td>No</td>
-              <td>
-                <ButtonDropdown
-                  isOpen={this.state.dropdownOpen}
-                  toggle={this.toggle}
-                >
-                  <DropdownToggle caret color="info" size="sm">
-                    Expired
-                  </DropdownToggle>
-                  <DropdownMenu>
-                    <DropdownItem>Reactivate</DropdownItem>
-                  </DropdownMenu>
-                </ButtonDropdown>
-              </td>
-            </tr>
+            {orderList.map(c => (
+              <OrderItem
+                key={c.orderId}
+                orderId={c.orderId}
+                date={c.date}
+                sku={c.sku}
+                downloaded={c.downloaded}
+                active={c.active}
+              />
+            ))}
           </tbody>
         </Table>
       </div>

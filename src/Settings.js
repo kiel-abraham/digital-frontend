@@ -21,7 +21,7 @@ const Settings = () => (
           name="webhook"
           id="webhook"
           value="/webhook"
-          readonly
+          readOnly
         />
       </FormGroup>
       <FormGroup>
