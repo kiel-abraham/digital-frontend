@@ -28,6 +28,9 @@ class Orders extends React.Component {
         orderId: "1001",
         sku: "1",
         date: "12/01/2018",
+        firstName: "Test",
+        lastName: "Person",
+        email: "test@email.com",
         downloaded: true,
         active: false
       },
@@ -35,6 +38,9 @@ class Orders extends React.Component {
         orderId: "1002",
         sku: "2",
         date: "13/01/2018",
+        firstName: "Mary",
+        lastName: "Smith",
+        email: "mary@email.com",
         downloaded: false,
         active: true
       },
@@ -42,6 +48,9 @@ class Orders extends React.Component {
         orderId: "1003",
         sku: "3",
         date: "14/01/2018",
+        firstName: "John",
+        lastName: "Smith",
+        email: "john@email.com",
         downloaded: false,
         active: true
       }
@@ -73,6 +82,8 @@ class Orders extends React.Component {
               <th>Order #</th>
               <th>SKU</th>
               <th>Date</th>
+              <th>Name</th>
+              <th>Email</th>
               <th>Downloaded</th>
               <th>Link</th>
             </tr>
@@ -83,6 +94,9 @@ class Orders extends React.Component {
                 key={c.orderId}
                 orderId={c.orderId}
                 date={c.date}
+                firstName={c.firstName}
+                lastName={c.lastName}
+                email={c.email}
                 sku={c.sku}
                 downloaded={c.downloaded}
                 active={c.active}

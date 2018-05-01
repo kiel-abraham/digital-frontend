@@ -28,10 +28,12 @@ class OrderItem extends Component {
         <th scope="row">{this.props.orderId}</th>
         <td>{this.props.sku}</td>
         <td>{this.props.date}</td>
+        <td>{this.props.firstName} {this.props.lastName}</td>
+        <td>{this.props.email}</td>
         <td>{this.props.downloaded ? "Yes" : "No"}</td>
         <td>
           {this.props.active ? (
-            <Button color="primary" size="sm">
+            <Button color="primary" size="sm" disabled>
               Active
             </Button>
           ) : (
