@@ -1,5 +1,5 @@
 import React from "react";
-import OrderItem from "./OrderItem";
+import OrderItems from "./OrderItems";
 import { Table, Row, Col, Form, FormGroup, Label, Input } from "reactstrap";
 
 class Orders extends React.Component {
@@ -23,34 +23,25 @@ class Orders extends React.Component {
   }
 
   render() {
-    let orderList = [
+    let orders = [
       {
         orderId: "1001",
         sku: "1",
-        date: "12/01/2018",
-        firstName: "Test",
-        lastName: "Person",
-        email: "test@email.com",
+        name: "Product1",
         downloaded: true,
         active: false
       },
       {
         orderId: "1002",
         sku: "2",
-        date: "13/01/2018",
-        firstName: "Mary",
-        lastName: "Smith",
-        email: "mary@email.com",
+        name: "Product2",
         downloaded: false,
         active: true
       },
       {
         orderId: "1003",
         sku: "3",
-        date: "14/01/2018",
-        firstName: "John",
-        lastName: "Smith",
-        email: "john@email.com",
+        name: "Product3",
         downloaded: false,
         active: true
       }
@@ -62,15 +53,14 @@ class Orders extends React.Component {
           <Col>
             <Form inline>
               <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-                <Label for="filer" className="mr-sm-2">
-                  Filter
+                <Label for="search" className="mr-sm-2">
+                  Search
                 </Label>
                 <Input
                   type="text"
-                  name="filter"
-                  id="filter"
-                  onKeyUp={this.handleFilter.bind(this)}
-                  placeholder="Filter using an order ID"
+                  name="search"
+                  id="search"
+                  placeholder="Search for an order"
                 />
               </FormGroup>
             </Form>
@@ -81,22 +71,15 @@ class Orders extends React.Component {
             <tr>
               <th>Order #</th>
               <th>SKU</th>
-              <th>Date</th>
-              <th>Name</th>
-              <th>Email</th>
               <th>Downloaded</th>
               <th>Link</th>
             </tr>
           </thead>
           <tbody>
-            {orderList.map(c => (
-              <OrderItem
+            {orders.map(c => (
+              <OrderItems
                 key={c.orderId}
                 orderId={c.orderId}
-                date={c.date}
-                firstName={c.firstName}
-                lastName={c.lastName}
-                email={c.email}
                 sku={c.sku}
                 downloaded={c.downloaded}
                 active={c.active}

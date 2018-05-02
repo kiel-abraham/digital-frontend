@@ -9,9 +9,6 @@ import {
   FormText,
   Label,
   Input,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
   Modal,
   ModalHeader,
   ModalBody,
@@ -51,13 +48,10 @@ class Products extends React.Component {
                   placeholder="Search for a product"
                 />
               </FormGroup>
-              <Button outline color="primary">
-                Search
-              </Button>
             </Form>
           </Col>
           <Col>
-            <Button color="info" onClick={this.toggle}>
+            <Button color="info" className="float-right" onClick={this.toggle}>
               Add Product
             </Button>
           </Col>
@@ -94,24 +88,6 @@ class Products extends React.Component {
             </tr>
           </tbody>
         </Table>
-
-        <Pagination>
-          <PaginationItem disabled>
-            <PaginationLink previous href="#" />
-          </PaginationItem>
-          <PaginationItem active>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">2</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">3</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink next href="#" />
-          </PaginationItem>
-        </Pagination>
 
         <Modal
           isOpen={this.state.modal}
@@ -154,7 +130,7 @@ class Products extends React.Component {
               Cancel
             </Button>
             <Button color="success" onClick={this.toggle}>
-              Save
+              Add
             </Button>
           </ModalFooter>
         </Modal>
