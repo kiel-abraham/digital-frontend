@@ -7,22 +7,27 @@
   },
   "products": {
     "smp_1": {
+      "sku": "smp_1",
       "name": "Sample 1",
       "fileId": "shortId"
     },
     "smp_2": {
+      "sku": "smp_2",
       "name": "Sample 2",
       "fileId": "shortId"
     },
     "smp_3": {
+      "sku": "smp_3",
       "name": "Sample 3",
       "fileId": "shortId"
     },
     "smp_4": {
+      "sku": "smp_4",
       "name": "Sample 4",
       "fileId": "shortId"
     },
     "smp_5": {
+      "sku": "smp_5",
       "name": "Sample 5",
       "fileId": "shortId"
     }

@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import ProductItems from "./ProductItems";
 import {
   Table,
   Button,
@@ -20,7 +21,8 @@ class Products extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      modal: false
+      modal: false,
+      products: []
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -33,11 +35,14 @@ class Products extends React.Component {
 
   componentDidMount() {
     axios
-      .get("../sample/config.json")
-      .then(res => {
-        console.log(res);
+      .get(
+        "https://raw.githubusercontent.com/kiel-abraham/digital-frontend/master/src/sample/config.json"
+      )
+      .then(response => {
+        this.setState({ products: response.data.products });
+        console.log(response.data.products);
       })
-      .catch(error => {
+      .catch(function(error) {
         console.log(error);
       });
   }
@@ -78,6 +83,9 @@ class Products extends React.Component {
             </tr>
           </thead>
           <tbody>
+            {this.state.products.map((item, index) => (
+              <ProductItems key={index} {...item} />
+            ))}
             <tr>
               <th scope="row">1</th>
               <td>eBook 1</td>
