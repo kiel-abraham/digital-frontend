@@ -38,7 +38,7 @@ class Products extends React.Component {
       .get(
         "https://raw.githubusercontent.com/kiel-abraham/digital-frontend/master/src/sample/config.json"
       )
-      .then(response => {
+      .then(function(response) {
         this.setState({ products: response.data.products });
         console.log(response.data.products);
       })
