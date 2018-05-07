@@ -76,13 +76,10 @@ class Orders extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {orders.map(c => (
+            {orders.map((item, index) => (
               <OrderItems
-                key={c.orderId}
-                orderId={c.orderId}
-                sku={c.sku}
-                downloaded={c.downloaded}
-                active={c.active}
+                key={index}
+                {...item}
               />
             ))}
           </tbody>

@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 import {
   Table,
   Button,
@@ -28,6 +29,17 @@ class Products extends React.Component {
     this.setState({
       modal: !this.state.modal
     });
+  }
+
+  componentDidMount() {
+    axios
+      .get("../sample/config.json")
+      .then(res => {
+        console.log(res);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   render() {
