@@ -33,14 +33,14 @@ class Products extends React.Component {
     });
   }
 
-  componentDidMount() {
+  componentWillMount() {
     axios
       .get(
         "https://raw.githubusercontent.com/kiel-abraham/digital-frontend/master/src/sample/config.json"
       )
       .then(function(response) {
-        this.setState({ products: response.data.products });
         console.log(response.data.products);
+        this.setState({ products: response.data.products });
       })
       .catch(function(error) {
         console.log(error);
