@@ -38,7 +38,7 @@ class Products extends React.Component {
       .get(
         "https://raw.githubusercontent.com/kiel-abraham/digital-frontend/master/src/sample/config.json"
       )
-      .then(function(response) {
+      .then(response => {
         console.log(response.data.products);
         this.setState({ products: response.data.products });
       })
@@ -83,29 +83,9 @@ class Products extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.products.map((item, index) => (
-              <ProductItems key={index} {...item} />
+            {Object.keys(this.state.products).map((item, index) => (
+              <ProductItems key={index} {...this.state.products[item]} />
             ))}
-            <tr>
-              <th scope="row">1</th>
-              <td>eBook 1</td>
-              <td>3</td>
-              <td>
-                <Button color="secondary" size="sm">
-                  Edit
-                </Button>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>eBook 2</td>
-              <td>12</td>
-              <td>
-                <Button color="secondary" size="sm">
-                  Edit
-                </Button>
-              </td>
-            </tr>
           </tbody>
         </Table>
 
