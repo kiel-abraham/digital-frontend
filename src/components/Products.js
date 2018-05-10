@@ -1,5 +1,4 @@
 import React from "react";
-import axios from "axios";
 import { connect } from "react-redux";
 import ProductItems from "./ProductItems";
 import {
@@ -22,8 +21,7 @@ class Products extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      modal: false,
-      products: []
+      modal: false
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -38,22 +36,8 @@ class Products extends React.Component {
     console.log(e.target.value);
   }
 
-  componentWillMount() {
-    axios
-      .get(
-        "https://raw.githubusercontent.com/kiel-abraham/digital-frontend/master/src/sample/config.json"
-      )
-      .then(response => {
-        this.setState({ products: response.data.products });
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-  }
-
   render() {
-    const data = this.state.products;
-    console.log("productsB", this.props.productsB);
+    const data = this.props.products;
     return (
       <div>
         <h1 className="mb-5">Products</h1>
@@ -85,7 +69,6 @@ class Products extends React.Component {
             <tr>
               <th>SKU</th>
               <th>Name</th>
-              <th>Downloads</th>
               <th>Edit</th>
             </tr>
           </thead>
@@ -147,7 +130,7 @@ class Products extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    productsB: { ...state.products2 }
+    products: { ...state.products }
   };
 }
 

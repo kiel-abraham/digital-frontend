@@ -88,7 +88,6 @@ class Email extends React.Component {
 }
 
 function mapStateToProps(state) {
-  console.log(state);
   return {
     settings: { ...state.settings }
   };

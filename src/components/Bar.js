@@ -56,7 +56,6 @@ class Bar extends React.Component {
 }
 
 function mapStateToProps(state) {
-  console.log(state);
   return {
     companyName: state.companyName
   };

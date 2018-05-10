@@ -11,7 +11,6 @@ class ProductItem extends Component {
       <tr>
         <th scope="row">{this.props.sku}</th>
         <td>{this.props.name}</td>
-        <td>3</td>
         <td>
           <Button color="secondary" size="sm">
             Edit

@@ -11,7 +11,7 @@ import App from "./components/App";
 function reducer(state = {}, action) {
   switch (action.type) {
     case "GET_PRODUCTS":
-      return { ...state, productsB: action.payload };
+      return { ...state, products: action.payload };
       break;
     case "GET_COMPANY_NAME":
       return { ...state, companyName: action.payload };
@@ -34,12 +34,7 @@ store.dispatch(dispatch => {
       "https://raw.githubusercontent.com/kiel-abraham/digital-frontend/master/src/sample/config.json"
     )
     .then(response => {
-      console.log("Axios", response.data);
-      let tt = response.data.products;
-      let ss = Object.keys(tt).map(x => {
-        return tt[x];
-      });
-      dispatch({ type: "GET_PRODUCTS", payload: ss });
+      dispatch({ type: "GET_PRODUCTS", payload: response.data.products });
       dispatch({ type: "GET_SETTINGS", payload: response.data.settings });
       dispatch({
         type: "GET_COMPANY_NAME",
@@ -47,7 +42,7 @@ store.dispatch(dispatch => {
       });
     })
     .catch(function(error) {
-      console.log(error);
+      console.log("Error getting config data: ", error);
     });
 });
 
