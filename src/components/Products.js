@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import { connect } from "react-redux";
 import ProductItems from "./ProductItems";
 import {
   Table,
@@ -33,13 +34,16 @@ class Products extends React.Component {
     });
   }
 
+  filterProducts(e) {
+    console.log(e.target.value);
+  }
+
   componentWillMount() {
     axios
       .get(
         "https://raw.githubusercontent.com/kiel-abraham/digital-frontend/master/src/sample/config.json"
       )
       .then(response => {
-        console.log(response.data.products);
         this.setState({ products: response.data.products });
       })
       .catch(function(error) {
@@ -48,6 +52,8 @@ class Products extends React.Component {
   }
 
   render() {
+    const data = this.state.products;
+    console.log("productsB", this.props.productsB);
     return (
       <div>
         <h1 className="mb-5">Products</h1>
@@ -60,6 +66,7 @@ class Products extends React.Component {
                 </Label>
                 <Input
                   type="text"
+                  onChange={this.filterProducts.bind(this)}
                   name="search"
                   id="search"
                   placeholder="Search for a product"
@@ -83,12 +90,11 @@ class Products extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {Object.keys(this.state.products).map((item, index) => (
-              <ProductItems key={index} {...this.state.products[item]} />
+            {Object.keys(data).map((item, index) => (
+              <ProductItems key={index} {...data[item]} />
             ))}
           </tbody>
         </Table>
-
         <Modal
           isOpen={this.state.modal}
           toggle={this.toggle}
@@ -139,4 +145,10 @@ class Products extends React.Component {
   }
 }
 
-export default Products;
+function mapStateToProps(state) {
+  return {
+    productsB: { ...state.products2 }
+  };
+}
+
+export default connect(mapStateToProps)(Products);
