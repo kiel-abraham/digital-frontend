@@ -10,9 +10,8 @@ export function reducer(state = {}, action) {
       return { ...state, settings: action.payload };
       break;
     case "CREATE_PRODUCT":
-      console.log("State", state.products);
-      console.log("From reducer", action.payload);
-      return state;
+      console.log("Before", state.products);
+      return { ...state, products: [...state.products, action.payload] };
       break;
     default:
       return state;
