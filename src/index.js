@@ -3,26 +3,11 @@ import { render } from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import { applyMiddleware, createStore } from "redux";
 import { Provider } from "react-redux";
+import { reducer } from "./reducer";
 import thunk from "redux-thunk";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import App from "./components/App";
-
-function reducer(state = {}, action) {
-  switch (action.type) {
-    case "GET_PRODUCTS":
-      return { ...state, products: action.payload };
-      break;
-    case "GET_COMPANY_NAME":
-      return { ...state, companyName: action.payload };
-      break;
-    case "GET_SETTINGS":
-      return { ...state, settings: action.payload };
-      break;
-    default:
-      return state;
-  }
-}
 
 const middleware = applyMiddleware(thunk);
 

@@ -60,11 +60,13 @@ class Email extends React.Component {
                   <CardText>
                     <p>Dear Customer,</p>
                     <br />
-                    <p>
-                      Thank you for your order [order number].<br />
-                      Please click the button below to download your product
-                    </p>
-                    <p>[sku] [name]</p>
+                    <div>
+                      <p>
+                        Thank you for your order [order number].<br />
+                        Please click the button below to download your product
+                      </p>
+                      <p>[sku] [name]</p>
+                    </div>
                     <Button disabled>Download</Button>
                     <br />
                     <br />
