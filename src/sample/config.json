@@ -3,7 +3,7 @@
   "companyName": "Test Store",
   "settings": {
     "replyEmail": "info@test.com",
-    "bccEmail": "admin@test.com"
+    "bccEmail": ""
   },
   "products": {
     "id1": {
