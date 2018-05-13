@@ -10,8 +10,16 @@ export function reducer(state = {}, action) {
       return { ...state, settings: action.payload };
       break;
     case "CREATE_PRODUCT":
-      console.log("Before", state.products);
-      return { ...state, products: [...state.products, action.payload] };
+      console.log(action.payload);
+      console.log("State", state.products);
+      const { id, sku, name } = action.payload;
+      return {
+        ...state,
+        products: {
+          ...state.products,
+          [id]: { sku: sku, name: name }
+        }
+      };
       break;
     default:
       return state;

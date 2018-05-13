@@ -87,11 +87,6 @@ class Products extends React.Component {
       <div>
         <h1 className="mb-5">Products</h1>
         <Row className="mb-4">
-          <Col xs="3">
-            <Button color="info" onClick={this.toggle}>
-              Add Product
-            </Button>
-          </Col>
           <Col>
             <Form inline>
               <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
@@ -107,6 +102,11 @@ class Products extends React.Component {
                 />
               </FormGroup>
             </Form>
+          </Col>
+          <Col>
+            <Button color="info" className="float-right" onClick={this.toggle}>
+              Add Product
+            </Button>
           </Col>
         </Row>
         <Table striped responsive>
