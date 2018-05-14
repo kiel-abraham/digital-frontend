@@ -3,7 +3,9 @@
   "companyName": "Test Store",
   "settings": {
     "replyEmail": "info@test.com",
-    "bccEmail": ""
+    "bccEmail": "",
+    "emailBody":
+      "Thank you for your order. Please click the link below to download your products."
   },
   "products": {
     "id1": {

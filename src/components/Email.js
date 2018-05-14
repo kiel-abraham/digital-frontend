@@ -5,8 +5,7 @@ import {
   CardHeader,
   CardText,
   CardBody,
-  CardTitle,
-  CardSubtitle,
+  Badge,
   Button,
   Row,
   Col,
@@ -16,10 +15,31 @@ import {
   Input,
   InputGroup,
   InputGroupAddon,
-  InputGroupText
+  InputGroupText,
+  Table
 } from "reactstrap";
 
 class Email extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleReply = this.handleReply.bind(this);
+    this.handleBcc = this.handleBcc.bind(this);
+    this.state = {
+      newBcc: this.props.settings.bccEmail,
+      newReply: this.props.settings.replyEmail
+    };
+  }
+
+  handleReply(e) {
+    console.log(e.target.value);
+    this.setState({ newReply: e.target.value });
+  }
+
+  handleBcc(e) {
+    console.log(e.target.value);
+    this.setState({ newBcc: e.target.value });
+  }
+
   render() {
     return (
       <div>
@@ -32,12 +52,39 @@ class Email extends React.Component {
                   <FormGroup>
                     <InputGroup>
                       <InputGroupAddon addonType="prepend">
+                        <InputGroupText>Subject</InputGroupText>
+                      </InputGroupAddon>
+                      <Input
+                        type="text"
+                        name="subject"
+                        placeholder="Company name - Order # product downloads"
+                        disabled
+                      />
+                    </InputGroup>
+                  </FormGroup>
+                  <FormGroup>
+                    <InputGroup>
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>To</InputGroupText>
+                      </InputGroupAddon>
+                      <Input
+                        type="email"
+                        name="toEmail"
+                        placeholder="customer email address"
+                        disabled
+                      />
+                    </InputGroup>
+                  </FormGroup>
+                  <FormGroup>
+                    <InputGroup>
+                      <InputGroupAddon addonType="prepend">
                         <InputGroupText>Reply</InputGroupText>
                       </InputGroupAddon>
                       <Input
                         type="email"
                         name="reply"
-                        value={this.props.settings.replyEmail}
+                        value={this.state.newReply}
+                        onChange={this.handleReply}
                         placeholder="Enter your reply email"
                       />
                     </InputGroup>
@@ -50,7 +97,8 @@ class Email extends React.Component {
                       <Input
                         type="email"
                         name="bcc"
-                        value={this.props.settings.bccEmail}
+                        value={this.state.newBcc}
+                        onChange={this.handleBcc}
                         placeholder="Enter an email to receive a copy"
                       />
                     </InputGroup>
@@ -58,19 +106,48 @@ class Email extends React.Component {
                 </CardHeader>
                 <CardBody>
                   <CardText>
-                    <p>Dear Customer,</p>
+                    <p>
+                      Dear <Badge color="secondary">customer.firstName</Badge>{" "}
+                      <Badge color="secondary">customer.Lastname</Badge>,
+                    </p>
                     <br />
                     <div>
-                      <p>
-                        Thank you for your order [order number].<br />
-                        Please click the button below to download your product
-                      </p>
-                      <p>[sku] [name]</p>
+                      <FormGroup>
+                        <Input
+                          type="textarea"
+                          name="emailBody"
+                          id="emailBody"
+                          value="Thank you for your order. Please click the link below to download your products."
+                        />
+                      </FormGroup>
+                      <Table>
+                        <thead>
+                          <tr>
+                            <th>SKU</th>
+                            <th>Name</th>
+                            <th>&nbsp;</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td scope="row">
+                              <Badge color="secondary">product.sku</Badge>
+                            </td>
+                            <td>
+                              <Badge color="secondary">product.name</Badge>
+                            </td>
+                            <td>
+                              <Button size="sm" disabled>
+                                Download
+                              </Button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </Table>
+                      <br />
+                      <br />
+                      <p>Regards,</p>
                     </div>
-                    <Button disabled>Download</Button>
-                    <br />
-                    <br />
-                    <br />
                   </CardText>
                   <img
                     className="mb-3"
@@ -78,7 +155,7 @@ class Email extends React.Component {
                   />
                 </CardBody>
               </Card>
-              <Button color="success" className="mt-3">
+              <Button color="success" className="mt-3 float-right">
                 Save
               </Button>
             </Col>

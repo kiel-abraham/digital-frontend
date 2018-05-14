@@ -10,8 +10,6 @@ export function reducer(state = {}, action) {
       return { ...state, settings: action.payload };
       break;
     case "CREATE_PRODUCT":
-      console.log(action.payload);
-      console.log("State", state.products);
       const { id, sku, name } = action.payload;
       return {
         ...state,
