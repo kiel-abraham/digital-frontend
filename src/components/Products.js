@@ -59,6 +59,17 @@ class Products extends React.Component {
 
   filterProducts(e) {
     console.log(e.target.value);
+    let updatedList = Object.keys(this.props.products).map((item, index) => {
+      return this.props.products[item];
+    });
+    console.log("List", updatedList);
+    let test = updatedList.filter(item => {
+      return (
+        item.sku.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1 ||
+        item.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
+      );
+    });
+    console.log("Filter", test);
   }
 
   handleAdd() {
@@ -94,7 +105,7 @@ class Products extends React.Component {
                   Search
                 </Label>
                 <Input
-                  type="text"
+                  type="search"
                   onChange={this.filterProducts}
                   name="search"
                   id="search"

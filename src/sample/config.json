@@ -14,8 +14,8 @@
       "fileId": "shortId"
     },
     "id2": {
-      "sku": "smp_2",
-      "name": "Sample 2",
+      "sku": "test2",
+      "name": "Test 2",
       "fileId": "shortId"
     },
     "id3": {
@@ -24,13 +24,13 @@
       "fileId": "shortId"
     },
     "id4": {
-      "sku": "smp_4",
-      "name": "Sample 4",
+      "sku": "123",
+      "name": "Another product",
       "fileId": "shortId"
     },
     "id5": {
-      "sku": "smp_5",
-      "name": "Sample 5",
+      "sku": "thh33",
+      "name": "test product",
       "fileId": "shortId"
     }
   }

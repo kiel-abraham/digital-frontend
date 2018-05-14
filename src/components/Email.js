@@ -24,9 +24,13 @@ class Email extends React.Component {
     super(props);
     this.handleReply = this.handleReply.bind(this);
     this.handleBcc = this.handleBcc.bind(this);
+    this.handleEmailBody = this.handleEmailBody.bind(this);
+    this.saveEmail = this.saveEmail.bind(this);
     this.state = {
+      save: false,
       newBcc: this.props.settings.bccEmail,
-      newReply: this.props.settings.replyEmail
+      newReply: this.props.settings.replyEmail,
+      newEmailBody: this.props.settings.emailBody
     };
   }
 
@@ -38,6 +42,30 @@ class Email extends React.Component {
   handleBcc(e) {
     console.log(e.target.value);
     this.setState({ newBcc: e.target.value });
+  }
+
+  handleEmailBody(e) {
+    console.log(e.target.value);
+    this.setState({ newEmailBody: e.target.value });
+  }
+
+  saveEmail(e) {
+    e.preventDefault();
+    console.log(
+      "Reply:",
+      this.state.newReply,
+      "BCC:",
+      this.state.newBcc,
+      "Body:",
+      this.state.newEmailBody
+    );
+    this.setState({ save: true });
+    setTimeout(
+      function() {
+        this.setState({ save: false });
+      }.bind(this),
+      2000
+    );
   }
 
   render() {
@@ -57,7 +85,7 @@ class Email extends React.Component {
                       <Input
                         type="text"
                         name="subject"
-                        placeholder="Company name - Order # product downloads"
+                        placeholder="Company name - order.number product downloads"
                         disabled
                       />
                     </InputGroup>
@@ -70,7 +98,7 @@ class Email extends React.Component {
                       <Input
                         type="email"
                         name="toEmail"
-                        placeholder="customer email address"
+                        placeholder="customer.email"
                         disabled
                       />
                     </InputGroup>
@@ -107,8 +135,7 @@ class Email extends React.Component {
                 <CardBody>
                   <CardText>
                     <p>
-                      Dear <Badge color="secondary">customer.firstName</Badge>{" "}
-                      <Badge color="secondary">customer.Lastname</Badge>,
+                      Dear <Badge color="secondary">customer.firstName</Badge>,
                     </p>
                     <br />
                     <div>
@@ -117,10 +144,11 @@ class Email extends React.Component {
                           type="textarea"
                           name="emailBody"
                           id="emailBody"
-                          value="Thank you for your order. Please click the link below to download your products."
+                          value={this.state.newEmailBody}
+                          onChange={this.handleEmailBody}
                         />
                       </FormGroup>
-                      <Table>
+                      <Table bordered>
                         <thead>
                           <tr>
                             <th>SKU</th>
@@ -149,14 +177,20 @@ class Email extends React.Component {
                       <p>Regards,</p>
                     </div>
                   </CardText>
-                  <img
-                    className="mb-3"
-                    src="https://www.riffsandlicks.com.au/assets/pdf_logo.gif"
-                  />
+                  <Col xs="3" className="pl-0">
+                    <img
+                      className="mb-3"
+                      src="https://www.riffsandlicks.com.au/assets/pdf_logo.gif"
+                    />
+                  </Col>
                 </CardBody>
               </Card>
-              <Button color="success" className="mt-3 float-right">
-                Save
+              <Button
+                color={this.state.save ? "info" : "success"}
+                className="mt-3 float-right"
+                onClick={this.saveEmail}
+              >
+                {this.state.save ? "Saved" : "Save"}
               </Button>
             </Col>
           </Row>
