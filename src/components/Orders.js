@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 import OrderItems from "./OrderItems";
 import { Table, Row, Col, Form, FormGroup, Label, Input } from "reactstrap";
 
@@ -63,6 +64,7 @@ class Orders extends React.Component {
   }
 
   render() {
+    console.log(this.props.orders);
     return (
       <div>
         <h1 className="mb-5">Orders</h1>
@@ -105,4 +107,10 @@ class Orders extends React.Component {
   }
 }
 
-export default Orders;
+const mapStateToProps = state => {
+  return {
+    orders: { ...state.orders }
+  };
+};
+
+export default connect(mapStateToProps)(Orders);

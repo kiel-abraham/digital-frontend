@@ -29,6 +29,16 @@ store.dispatch(dispatch => {
     .catch(function(error) {
       console.log("Error getting config data: ", error);
     });
+  axios
+    .get(
+      "https://raw.githubusercontent.com/kiel-abraham/digital-frontend/master/src/sample/orders.json"
+    )
+    .then(response => {
+      dispatch({ type: "GET_ORDERS", payload: response.data });
+    })
+    .catch(function(error) {
+      console.log("Error getting config data: ", error);
+    });
 });
 
 render(

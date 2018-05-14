@@ -9,6 +9,9 @@ export function reducer(state = {}, action) {
     case "GET_SETTINGS":
       return { ...state, settings: action.payload };
       break;
+    case "GET_ORDERS":
+      return { ...state, orders: action.payload };
+      break;
     case "CREATE_PRODUCT":
       const { id, sku, name } = action.payload;
       return {
