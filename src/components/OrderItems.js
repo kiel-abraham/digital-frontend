@@ -27,6 +27,7 @@ class OrderItem extends Component {
       <tr>
         <th scope="row">{this.props.orderId}</th>
         <td>{this.props.sku}</td>
+        <td>{this.props.name}</td>
         <td>{this.props.downloaded ? "Yes" : "No"}</td>
         <td>
           {this.props.active ? (

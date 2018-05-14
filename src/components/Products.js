@@ -31,8 +31,16 @@ class Products extends React.Component {
     this.state = {
       modal: false,
       skuValue: "",
-      nameValue: ""
+      nameValue: "",
+      productList: []
     };
+  }
+
+  componentDidMount() {
+    let list = Object.keys(this.props.products).map((item, index) => {
+      return this.props.products[item];
+    });
+    this.setState({ productList: list });
   }
 
   toggle() {
@@ -49,27 +57,25 @@ class Products extends React.Component {
     });
   }
 
-  handleSku(event) {
-    this.setState({ skuValue: event.target.value });
+  handleSku(e) {
+    this.setState({ skuValue: e.target.value });
   }
 
-  handleName(event) {
-    this.setState({ nameValue: event.target.value });
+  handleName(e) {
+    this.setState({ nameValue: e.target.value });
   }
 
   filterProducts(e) {
-    console.log(e.target.value);
     let updatedList = Object.keys(this.props.products).map((item, index) => {
       return this.props.products[item];
     });
-    console.log("List", updatedList);
     let test = updatedList.filter(item => {
       return (
         item.sku.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1 ||
         item.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
       );
     });
-    console.log("Filter", test);
+    this.setState({ productList: test });
   }
 
   handleAdd() {
@@ -93,7 +99,7 @@ class Products extends React.Component {
   }
 
   render() {
-    const data = this.props.products;
+    // const data = this.props.products;
     return (
       <div>
         <h1 className="mb-5">Products</h1>
@@ -129,8 +135,8 @@ class Products extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {Object.keys(data).map((item, index) => (
-              <ProductItems key={index} {...data[item]} />
+            {this.state.productList.map((item, index) => (
+              <ProductItems key={index} {...item} />
             ))}
           </tbody>
         </Table>

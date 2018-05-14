@@ -9,7 +9,7 @@ class ProductItem extends Component {
   render() {
     return (
       <tr>
-        <th scope="row">{this.props.sku}</th>
+        <td scope="row">{this.props.sku}</td>
         <td>{this.props.name}</td>
         <td>
           <Button color="secondary" size="sm">

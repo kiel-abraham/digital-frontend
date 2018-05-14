@@ -7,23 +7,16 @@ class Orders extends React.Component {
     super(props);
 
     this.toggle = this.toggle.bind(this);
+    this.filterOrders = this.filterOrders.bind(this);
     this.state = {
-      dropdownOpen: false
+      dropdownOpen: false,
+      orders: [],
+      orderList: []
     };
   }
 
-  toggle() {
-    this.setState({
-      dropdownOpen: !this.state.dropdownOpen
-    });
-  }
-
-  handleFilter(event) {
-    console.log(event.target.value);
-  }
-
-  render() {
-    let orders = [
+  componentDidMount() {
+    const x = [
       {
         orderId: "1001",
         sku: "1",
@@ -46,6 +39,30 @@ class Orders extends React.Component {
         active: true
       }
     ];
+    this.setState({
+      orders: x,
+      orderList: x
+    });
+  }
+
+  toggle() {
+    this.setState({
+      dropdownOpen: !this.state.dropdownOpen
+    });
+  }
+
+  filterOrders(e) {
+    let y = this.state.orderList.filter(item => {
+      return (
+        item.sku.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1 ||
+        item.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1 ||
+        item.orderId.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
+      );
+    });
+    this.setState({ orders: y });
+  }
+
+  render() {
     return (
       <div>
         <h1 className="mb-5">Orders</h1>
@@ -57,7 +74,8 @@ class Orders extends React.Component {
                   Search
                 </Label>
                 <Input
-                  type="text"
+                  type="search"
+                  onChange={this.filterOrders}
                   name="search"
                   id="search"
                   placeholder="Search for an order"
@@ -71,12 +89,15 @@ class Orders extends React.Component {
             <tr>
               <th>Order #</th>
               <th>SKU</th>
+              <th>Name</th>
               <th>Downloaded</th>
               <th>Link</th>
             </tr>
           </thead>
           <tbody>
-            {orders.map((item, index) => <OrderItems key={index} {...item} />)}
+            {this.state.orders.map((item, index) => (
+              <OrderItems key={index} {...item} />
+            ))}
           </tbody>
         </Table>
       </div>
