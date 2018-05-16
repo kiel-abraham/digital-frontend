@@ -18,7 +18,7 @@ export function reducer(state = {}, action) {
         ...state,
         products: {
           ...state.products,
-          ["id" + id]: { sku: sku, name: name }
+          ["id" + id]: { sku: sku, name: name, dateAdded: id }
         }
       };
       break;

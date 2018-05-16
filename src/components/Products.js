@@ -1,5 +1,4 @@
 import React from "react";
-// import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { createProduct } from "../actions";
 import ProductItems from "./ProductItems";
@@ -36,12 +35,32 @@ class Products extends React.Component {
     };
   }
 
-  componentDidMount() {
-    let list = Object.keys(this.props.products).map((item, index) => {
-      return this.props.products[item];
-    });
-    this.setState({ productList: list });
+  componentWillReceiveProps(newProps) {
+    this.productArray(newProps.products);
   }
+
+  componentDidMount() {
+    this.productArray(this.props.products);
+  }
+
+  productArray = value => {
+    let x = Object.keys(value).map((item, index) => {
+      return value[item];
+    });
+    x.sort(function(a, b) {
+      var nameA = a.name.toUpperCase();
+      var nameB = b.name.toUpperCase();
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      // names must be equal
+      return 0;
+    });
+    this.setState({ productList: x });
+  };
 
   toggle() {
     this.setState({
@@ -69,37 +88,47 @@ class Products extends React.Component {
     let updatedList = Object.keys(this.props.products).map((item, index) => {
       return this.props.products[item];
     });
-    let test = updatedList.filter(item => {
+    let filtered = updatedList.filter(item => {
       return (
         item.sku.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1 ||
         item.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
       );
     });
-    this.setState({ productList: test });
+    this.setState({ productList: filtered });
+  }
+
+  checkSku(sku) {
+    let x = this.state.productList.find(function(element) {
+      return element.sku === sku;
+    });
+    return x;
   }
 
   handleAdd() {
-    if (this.state.skuValue !== "" && this.state.nameValue !== "") {
-      this.props.createProduct({
-        id: Date.now(),
-        sku: this.state.skuValue,
-        name: this.state.nameValue
-      });
-      setTimeout(
-        function() {
-          this.setState({
-            skuValue: "",
-            nameValue: "",
-            modal: !this.state.modal
-          });
-        }.bind(this),
-        300
-      );
+    let skuExists = this.checkSku(this.state.skuValue);
+    if (typeof skuExists === "undefined") {
+      if (this.state.skuValue !== "" && this.state.nameValue !== "") {
+        this.props.createProduct({
+          id: Date.now(),
+          sku: this.state.skuValue,
+          name: this.state.nameValue
+        });
+        setTimeout(
+          function() {
+            this.setState({
+              skuValue: "",
+              nameValue: "",
+              modal: !this.state.modal
+            });
+          }.bind(this),
+          300
+        );
+      }
     }
   }
 
   render() {
-    // const data = this.props.products;
+    // console.log(this.state.productList);
     return (
       <div>
         <h1 className="mb-5">Products</h1>

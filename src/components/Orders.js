@@ -64,7 +64,6 @@ class Orders extends React.Component {
   }
 
   render() {
-    console.log(this.props.orders);
     return (
       <div>
         <h1 className="mb-5">Orders</h1>
