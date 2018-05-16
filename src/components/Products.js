@@ -128,7 +128,7 @@ class Products extends React.Component {
   }
 
   render() {
-    // console.log(this.state.productList);
+    console.log(this.state.productList);
     return (
       <div>
         <h1 className="mb-5">Products</h1>
