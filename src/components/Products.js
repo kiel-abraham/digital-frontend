@@ -48,16 +48,7 @@ class Products extends React.Component {
       return value[item];
     });
     x.sort(function(a, b) {
-      var nameA = a.name.toUpperCase();
-      var nameB = b.name.toUpperCase();
-      if (nameA < nameB) {
-        return -1;
-      }
-      if (nameA > nameB) {
-        return 1;
-      }
-      // names must be equal
-      return 0;
+      return b.timeCreated - a.timeCreated;
     });
     this.setState({ productList: x });
   };
@@ -109,7 +100,7 @@ class Products extends React.Component {
     if (typeof skuExists === "undefined") {
       if (this.state.skuValue !== "" && this.state.nameValue !== "") {
         this.props.createProduct({
-          id: Date.now(),
+          timeCreated: Date.now(),
           sku: this.state.skuValue,
           name: this.state.nameValue
         });
@@ -129,6 +120,7 @@ class Products extends React.Component {
 
   render() {
     console.log(this.state.productList);
+    console.log("Props", this.props.products);
     return (
       <div>
         <h1 className="mb-5">Products</h1>
@@ -145,6 +137,7 @@ class Products extends React.Component {
                   name="search"
                   id="search"
                   placeholder="Search for a product"
+                  autoComplete="off"
                 />
               </FormGroup>
             </Form>

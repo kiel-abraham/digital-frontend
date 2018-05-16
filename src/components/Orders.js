@@ -11,40 +11,27 @@ class Orders extends React.Component {
     this.filterOrders = this.filterOrders.bind(this);
     this.state = {
       dropdownOpen: false,
-      orders: [],
-      orderList: []
+      orders: []
     };
   }
 
-  componentDidMount() {
-    const x = [
-      {
-        orderId: "1001",
-        sku: "1",
-        name: "Product1",
-        downloaded: true,
-        active: false
-      },
-      {
-        orderId: "1002",
-        sku: "2",
-        name: "Product2",
-        downloaded: false,
-        active: true
-      },
-      {
-        orderId: "1003",
-        sku: "3",
-        name: "Product3",
-        downloaded: false,
-        active: true
-      }
-    ];
-    this.setState({
-      orders: x,
-      orderList: x
-    });
+  componentWillReceiveProps(newProps) {
+    this.productArray(newProps.orders);
   }
+
+  componentDidMount() {
+    this.productArray(this.props.orders);
+  }
+
+  productArray = value => {
+    let x = Object.keys(value).map((item, index) => {
+      return value[item];
+    });
+    x.sort(function(a, b) {
+      return b.orderId - a.orderId;
+    });
+    this.setState({ orders: x });
+  };
 
   toggle() {
     this.setState({
@@ -53,14 +40,18 @@ class Orders extends React.Component {
   }
 
   filterOrders(e) {
-    let y = this.state.orderList.filter(item => {
+    let updatedList = Object.keys(this.props.orders).map((item, index) => {
+      return this.props.orders[item];
+    });
+    let filtered = updatedList.filter(item => {
       return (
         item.sku.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1 ||
-        item.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1 ||
-        item.orderId.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
+        item.orderId.toLowerCase().indexOf(e.target.value.toLowerCase()) !==
+          -1 ||
+        item.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
       );
     });
-    this.setState({ orders: y });
+    this.productArray(filtered);
   }
 
   render() {
@@ -80,6 +71,7 @@ class Orders extends React.Component {
                   name="search"
                   id="search"
                   placeholder="Search for an order"
+                  autoComplete="off"
                 />
               </FormGroup>
             </Form>
@@ -96,8 +88,8 @@ class Orders extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.orders.map((item, index) => (
-              <OrderItems key={index} {...item} />
+            {Object.keys(this.state.orders).map((item, index) => (
+              <OrderItems key={index} {...this.state.orders[item]} />
             ))}
           </tbody>
         </Table>

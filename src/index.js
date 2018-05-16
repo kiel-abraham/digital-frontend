@@ -37,7 +37,7 @@ store.dispatch(dispatch => {
       dispatch({ type: "GET_ORDERS", payload: response.data });
     })
     .catch(function(error) {
-      console.log("Error getting config data: ", error);
+      console.log("Error getting order data: ", error);
     });
 });
 

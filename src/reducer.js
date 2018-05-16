@@ -13,12 +13,12 @@ export function reducer(state = {}, action) {
       return { ...state, orders: action.payload };
       break;
     case "CREATE_PRODUCT":
-      const { id, sku, name } = action.payload;
+      const { timeCreated, sku, name } = action.payload;
       return {
         ...state,
         products: {
           ...state.products,
-          ["id" + id]: { sku: sku, name: name, dateAdded: id }
+          [timeCreated]: { sku: sku, name: name, timeCreated: timeCreated }
         }
       };
       break;
