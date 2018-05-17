@@ -11,6 +11,7 @@ class ProductItem extends Component {
       <tr>
         <td scope="row">{this.props.sku}</td>
         <td>{this.props.name}</td>
+        <td>{this.props.fileName}</td>
         <td>
           <Button color="secondary" size="sm">
             Edit

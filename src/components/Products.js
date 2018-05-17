@@ -27,10 +27,15 @@ class Products extends React.Component {
     this.handleAdd = this.handleAdd.bind(this);
     this.handleSku = this.handleSku.bind(this);
     this.handleName = this.handleName.bind(this);
+    this.handleFile = this.handleFile.bind(this);
     this.state = {
       modal: false,
       skuValue: "",
+      skuError: "",
       nameValue: "",
+      nameError: "",
+      fileName: "",
+      fileError: "",
       productList: []
     };
   }
@@ -67,12 +72,17 @@ class Products extends React.Component {
     });
   }
 
+  handleFile(e) {
+    console.log(e.target.files[0]);
+    this.setState({ fileName: e.target.files[0].name, fileError: "" });
+  }
+
   handleSku(e) {
-    this.setState({ skuValue: e.target.value });
+    this.setState({ skuValue: e.target.value, skuError: "" });
   }
 
   handleName(e) {
-    this.setState({ nameValue: e.target.value });
+    this.setState({ nameValue: e.target.value, nameError: "" });
   }
 
   filterProducts(e) {
@@ -96,13 +106,27 @@ class Products extends React.Component {
   }
 
   handleAdd() {
+    if (this.state.skuValue === "") {
+      this.setState({ skuError: "Please enter a SKU" });
+    }
+    if (this.state.nameValue === "") {
+      this.setState({ nameError: "Please enter a name" });
+    }
+    if (this.state.fileName === "") {
+      this.setState({ fileError: "Please choose a file to upload" });
+    }
     let skuExists = this.checkSku(this.state.skuValue);
     if (typeof skuExists === "undefined") {
-      if (this.state.skuValue !== "" && this.state.nameValue !== "") {
+      if (
+        this.state.skuValue !== "" &&
+        this.state.nameValue !== "" &&
+        this.state.fileName !== ""
+      ) {
         this.props.createProduct({
           timeCreated: Date.now(),
           sku: this.state.skuValue,
-          name: this.state.nameValue
+          name: this.state.nameValue,
+          fileName: this.state.fileName
         });
         setTimeout(
           function() {
@@ -115,12 +139,12 @@ class Products extends React.Component {
           300
         );
       }
+    } else {
+      this.setState({ skuError: "SKU already exists" });
     }
   }
 
   render() {
-    console.log(this.state.productList);
-    console.log("Props", this.props.products);
     return (
       <div>
         <h1 className="mb-5">Products</h1>
@@ -153,6 +177,7 @@ class Products extends React.Component {
             <tr>
               <th>SKU</th>
               <th>Name</th>
+              <th>File</th>
               <th>Edit</th>
             </tr>
           </thead>
@@ -180,6 +205,7 @@ class Products extends React.Component {
                   onChange={this.handleSku}
                   placeholder="Enter your SKU to match store"
                 />
+                <FormText color="danger">{this.state.skuError}</FormText>
               </FormGroup>
               <FormGroup>
                 <Label for="name">Name</Label>
@@ -191,14 +217,21 @@ class Products extends React.Component {
                   onChange={this.handleName}
                   placeholder="Enter your product name"
                 />
+                <FormText color="danger">{this.state.nameError}</FormText>
               </FormGroup>
               <FormGroup>
                 <Label for="file">File</Label>
-                <Input type="file" name="file" id="file" />
+                <Input
+                  type="file"
+                  name="file"
+                  id="file"
+                  onChange={this.handleFile}
+                  accept="image/*, audio/*, video/*, text/plain, application/pdf"
+                />
                 <FormText color="muted">
-                  This is some placeholder block-level help text for the above
-                  input. It's a bit lighter and easily wraps to a new line.
+                  Accepted formats include .pdf .avi .mkv
                 </FormText>
+                <FormText color="danger">{this.state.fileError}</FormText>
               </FormGroup>
             </Form>
           </ModalBody>
