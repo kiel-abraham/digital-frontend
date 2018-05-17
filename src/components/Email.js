@@ -11,7 +11,7 @@ import {
   Col,
   Form,
   FormGroup,
-  Label,
+  FormText,
   Input,
   InputGroup,
   InputGroupAddon,
@@ -30,13 +30,15 @@ class Email extends React.Component {
       save: false,
       newBcc: this.props.settings.bccEmail,
       newReply: this.props.settings.replyEmail,
-      newEmailBody: this.props.settings.emailBody
+      newEmailBody: this.props.settings.emailBody,
+      replyError: "",
+      bccEmail: ""
     };
   }
 
   handleReply(e) {
     console.log(e.target.value);
-    this.setState({ newReply: e.target.value });
+    this.setState({ newReply: e.target.value, replyError: "" });
   }
 
   handleBcc(e) {
@@ -50,22 +52,18 @@ class Email extends React.Component {
   }
 
   saveEmail(e) {
-    e.preventDefault();
-    console.log(
-      "Reply:",
-      this.state.newReply,
-      "BCC:",
-      this.state.newBcc,
-      "Body:",
-      this.state.newEmailBody
-    );
-    this.setState({ save: true });
-    setTimeout(
-      function() {
-        this.setState({ save: false });
-      }.bind(this),
-      2000
-    );
+    //e.preventDefault();
+    if (this.state.newReply === "") {
+      this.setState({ replyError: "Reply email is required" });
+    } else {
+      this.setState({ save: true });
+      setTimeout(
+        function() {
+          this.setState({ save: false });
+        }.bind(this),
+        2000
+      );
+    }
   }
 
   render() {
@@ -116,6 +114,7 @@ class Email extends React.Component {
                         placeholder="Enter your reply email"
                       />
                     </InputGroup>
+                    <FormText color="danger">{this.state.replyError}</FormText>
                   </FormGroup>
                   <FormGroup>
                     <InputGroup>
@@ -130,6 +129,7 @@ class Email extends React.Component {
                         placeholder="Enter an email to receive a copy"
                       />
                     </InputGroup>
+                    <FormText color="danger">{this.state.bccError}</FormText>
                   </FormGroup>
                 </CardHeader>
                 <CardBody>

@@ -12,6 +12,7 @@ import {
   FormText,
   Label,
   Input,
+  UncontrolledTooltip,
   Modal,
   ModalHeader,
   ModalBody,
@@ -35,6 +36,7 @@ class Products extends React.Component {
       nameValue: "",
       nameError: "",
       fileName: "",
+      fileSize: 0,
       fileError: "",
       productList: []
     };
@@ -74,7 +76,11 @@ class Products extends React.Component {
 
   handleFile(e) {
     console.log(e.target.files[0]);
-    this.setState({ fileName: e.target.files[0].name, fileError: "" });
+    this.setState({
+      fileName: e.target.files[0].name,
+      fileSize: e.target.files[0].size,
+      fileError: ""
+    });
   }
 
   handleSku(e) {
@@ -115,6 +121,9 @@ class Products extends React.Component {
     if (this.state.fileName === "") {
       this.setState({ fileError: "Please choose a file to upload" });
     }
+    if (this.state.fileSize > 1048576 * 10) {
+      this.setState({ fileError: "Upload limit is 10MB" });
+    }
     let skuExists = this.checkSku(this.state.skuValue);
     if (typeof skuExists === "undefined") {
       if (
@@ -152,9 +161,14 @@ class Products extends React.Component {
           <Col>
             <Form inline>
               <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-                <Label for="search" className="mr-sm-2">
-                  Search
-                </Label>
+                <a href="#" id="help">
+                  <Label for="search" className="mr-sm-2">
+                    Search
+                  </Label>
+                </a>
+                <UncontrolledTooltip placement="top" target="help">
+                  Search using SKU or Name
+                </UncontrolledTooltip>
                 <Input
                   type="search"
                   onChange={this.filterProducts}
@@ -187,11 +201,7 @@ class Products extends React.Component {
             ))}
           </tbody>
         </Table>
-        <Modal
-          isOpen={this.state.modal}
-          toggle={this.toggle}
-          className={this.props.className}
-        >
+        <Modal isOpen={this.state.modal} toggle={this.toggle}>
           <ModalHeader toggle={this.toggle}>Add Product</ModalHeader>
           <ModalBody>
             <Form>
@@ -229,7 +239,7 @@ class Products extends React.Component {
                   accept="image/*, audio/*, video/*, text/plain, application/pdf"
                 />
                 <FormText color="muted">
-                  Accepted formats include .pdf .avi .mkv
+                  Max size 10MB. Accepted formats include .pdf .avi .mkv
                 </FormText>
                 <FormText color="danger">{this.state.fileError}</FormText>
               </FormGroup>

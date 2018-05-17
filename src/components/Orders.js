@@ -1,7 +1,16 @@
 import React from "react";
 import { connect } from "react-redux";
 import OrderItems from "./OrderItems";
-import { Table, Row, Col, Form, FormGroup, Label, Input } from "reactstrap";
+import {
+  Table,
+  Row,
+  Col,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  UncontrolledTooltip
+} from "reactstrap";
 
 class Orders extends React.Component {
   constructor(props) {
@@ -62,9 +71,14 @@ class Orders extends React.Component {
           <Col>
             <Form inline>
               <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-                <Label for="search" className="mr-sm-2">
-                  Search
-                </Label>
+                <a href="#" id="help">
+                  <Label for="search" className="mr-sm-2">
+                    Search
+                  </Label>
+                </a>
+                <UncontrolledTooltip placement="top" target="help">
+                  Search using OrderId, SKU or Name
+                </UncontrolledTooltip>
                 <Input
                   type="search"
                   onChange={this.filterOrders}
