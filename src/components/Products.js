@@ -1,7 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
-import { createProduct } from "../actions";
+import { createProduct, deleteProduct } from "../actions";
 import ProductItems from "./ProductItems";
+import Note from "./Note";
 import {
   Table,
   Button,
@@ -24,6 +25,11 @@ class Products extends React.Component {
     super(props);
     this.cancel = this.cancel.bind(this);
     this.toggle = this.toggle.bind(this);
+    this.edit = this.edit.bind(this);
+    this.closeEdit = this.closeEdit.bind(this);
+    this.handleEditSku = this.handleEditSku.bind(this);
+    this.handleEditName = this.handleEditName.bind(this);
+    this.handleDeleteProduct = this.handleDeleteProduct.bind(this);
     this.filterProducts = this.filterProducts.bind(this);
     this.handleAdd = this.handleAdd.bind(this);
     this.handleSku = this.handleSku.bind(this);
@@ -31,6 +37,12 @@ class Products extends React.Component {
     this.handleFile = this.handleFile.bind(this);
     this.state = {
       modal: false,
+      editModal: false,
+      note: true,
+      noteMessage: "",
+      noteColor: "",
+      editSku: "",
+      editName: "",
       skuValue: "",
       skuError: "",
       nameValue: "",
@@ -60,27 +72,81 @@ class Products extends React.Component {
     this.setState({ productList: x });
   };
 
+  triggerNote(color, message) {
+    this.setState({
+      note: true,
+      noteColor: color,
+      noteMessage: message
+    });
+    setTimeout(
+      function() {
+        this.setState({
+          note: false,
+          noteColor: "",
+          noteMessage: ""
+        });
+      }.bind(this),
+      2000
+    );
+  }
+
   toggle() {
     this.setState({
       modal: !this.state.modal
     });
   }
 
+  edit(product) {
+    this.setState({
+      editModal: !this.state.editModal,
+      editSku: product[0],
+      editName: product[1]
+    });
+  }
+
+  closeEdit() {
+    this.setState({
+      editModal: !this.state.editModal
+    });
+  }
+
+  handleEditSku(e) {
+    this.setState({ editSku: e.target.value });
+  }
+
+  handleEditName(e) {
+    this.setState({ editName: e.target.value });
+  }
+
+  handleDeleteProduct() {
+    this.props.deleteProduct(this.state.editSku);
+    this.setState({
+      editModal: !this.state.editModal
+    });
+    this.triggerNote("success", "Product deleted");
+  }
+
   cancel() {
     this.setState({
       skuValue: "",
       nameValue: "",
+      skuError: "",
+      nameError: "",
+      fileError: "",
       modal: !this.state.modal
     });
   }
 
   handleFile(e) {
-    console.log(e.target.files[0]);
     this.setState({
       fileName: e.target.files[0].name,
-      fileSize: e.target.files[0].size,
-      fileError: ""
+      fileSize: e.target.files[0].size
     });
+    if (e.target.files[0].size > 1048576 * 10) {
+      this.setState({ fileError: "Upload limit is 10MB" });
+    } else {
+      this.setState({ fileError: "" });
+    }
   }
 
   handleSku(e) {
@@ -100,6 +166,9 @@ class Products extends React.Component {
         item.sku.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1 ||
         item.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
       );
+    });
+    filtered.sort(function(a, b) {
+      return b.timeCreated - a.timeCreated;
     });
     this.setState({ productList: filtered });
   }
@@ -125,37 +194,40 @@ class Products extends React.Component {
       this.setState({ fileError: "Upload limit is 10MB" });
     }
     let skuExists = this.checkSku(this.state.skuValue);
-    if (typeof skuExists === "undefined") {
-      if (
-        this.state.skuValue !== "" &&
-        this.state.nameValue !== "" &&
-        this.state.fileName !== ""
-      ) {
-        this.props.createProduct({
-          timeCreated: Date.now(),
-          sku: this.state.skuValue,
-          name: this.state.nameValue,
-          fileName: this.state.fileName
-        });
-        setTimeout(
-          function() {
-            this.setState({
-              skuValue: "",
-              nameValue: "",
-              modal: !this.state.modal
-            });
-          }.bind(this),
-          300
-        );
-      }
-    } else {
+    if (typeof skuExists !== "undefined") {
       this.setState({ skuError: "SKU already exists" });
+      return;
+    }
+
+    if (
+      this.state.skuValue !== "" &&
+      this.state.nameValue !== "" &&
+      this.state.fileName !== "" &&
+      this.state.skuError === "" &&
+      this.state.nameError === "" &&
+      this.state.fileError === ""
+    ) {
+      this.props.createProduct({
+        timeCreated: Date.now(),
+        sku: this.state.skuValue,
+        name: this.state.nameValue,
+        fileName: this.state.fileName
+      });
+      this.triggerNote("success", "Product created");
+      this.setState({
+        skuValue: "",
+        nameValue: "",
+        modal: !this.state.modal
+      });
     }
   }
 
   render() {
     return (
       <div>
+        {this.state.note && (
+          <Note color={this.state.noteColor} message={this.state.noteMessage} />
+        )}
         <h1 className="mb-5">Products</h1>
         <Row className="mb-4">
           <Col>
@@ -197,7 +269,7 @@ class Products extends React.Component {
           </thead>
           <tbody>
             {this.state.productList.map((item, index) => (
-              <ProductItems key={index} {...item} />
+              <ProductItems key={index} parentToggle={this.edit} {...item} />
             ))}
           </tbody>
         </Table>
@@ -246,11 +318,55 @@ class Products extends React.Component {
             </Form>
           </ModalBody>
           <ModalFooter>
-            <Button outline color="danger" onClick={this.cancel}>
+            <Button outline color="secondary" onClick={this.cancel}>
               Cancel
             </Button>
             <Button color="success" onClick={this.handleAdd}>
               Add
+            </Button>
+          </ModalFooter>
+        </Modal>
+
+        <Modal isOpen={this.state.editModal} toggle={this.closeEdit}>
+          <ModalHeader toggle={this.closeEdit}>Edit Product</ModalHeader>
+          <ModalBody>
+            <Form>
+              <FormGroup>
+                <Label for="sku">SKU</Label>
+                <Input
+                  type="text"
+                  name="sku"
+                  id="sku"
+                  value={this.state.editSku}
+                  onChange={this.handleEditSku}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="name">Name</Label>
+                <Input
+                  type="text"
+                  name="name"
+                  id="name"
+                  value={this.state.editName}
+                  onChange={this.handleEditName}
+                />
+              </FormGroup>
+            </Form>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              outline
+              color="danger"
+              className="mr-auto"
+              onClick={this.handleDeleteProduct}
+            >
+              Delete
+            </Button>
+            <Button outline color="secondary" onClick={this.closeEdit}>
+              Cancel
+            </Button>
+            <Button color="success" onClick={this.closeEdit}>
+              Update
             </Button>
           </ModalFooter>
         </Modal>
@@ -278,7 +394,8 @@ function mapDispatchToProps(dispatch) {
 }
 */
 const mapDispatchToProps = {
-  createProduct
+  createProduct,
+  deleteProduct
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Products);

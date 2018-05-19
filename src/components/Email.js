@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import Note from "./Note";
 import {
   Card,
   CardHeader,
@@ -27,7 +28,9 @@ class Email extends React.Component {
     this.handleEmailBody = this.handleEmailBody.bind(this);
     this.saveEmail = this.saveEmail.bind(this);
     this.state = {
-      save: false,
+      note: false,
+      noteColor: "",
+      noteMessage: "",
       newBcc: this.props.settings.bccEmail,
       newReply: this.props.settings.replyEmail,
       newEmailBody: this.props.settings.emailBody,
@@ -54,21 +57,37 @@ class Email extends React.Component {
   saveEmail(e) {
     //e.preventDefault();
     if (this.state.newReply === "") {
-      this.setState({ replyError: "Reply email is required" });
+      this.setState({
+        replyError: "Reply email is required",
+        note: true,
+        noteColor: "danger",
+        noteMessage: "Please fix errors"
+      });
     } else {
-      this.setState({ save: true });
-      setTimeout(
-        function() {
-          this.setState({ save: false });
-        }.bind(this),
-        2000
-      );
+      this.setState({
+        note: true,
+        noteColor: "success",
+        noteMessage: "Save successful"
+      });
     }
+    setTimeout(
+      function() {
+        this.setState({
+          note: false,
+          noteColor: "",
+          noteMessage: ""
+        });
+      }.bind(this),
+      2000
+    );
   }
 
   render() {
     return (
       <div>
+        {this.state.note && (
+          <Note color={this.state.noteColor} message={this.state.noteMessage} />
+        )}
         <h1 className="mb-5">Email</h1>
         <Form>
           <Row>
@@ -190,7 +209,7 @@ class Email extends React.Component {
                 className="mt-3 float-right"
                 onClick={this.saveEmail}
               >
-                {this.state.save ? "Saved" : "Save"}
+                Save
               </Button>
             </Col>
           </Row>
