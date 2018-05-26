@@ -58,11 +58,6 @@ class Bar extends React.Component {
                   Email
                 </Link>
               </NavItem>
-              <NavItem>
-                <Link to="/settings" className="nav-link">
-                  Settings
-                </Link>
-              </NavItem>
             </Nav>
             <Nav className="ml-auto" navbar>
               <UncontrolledDropdown nav inNavbar>
@@ -72,6 +67,9 @@ class Bar extends React.Component {
                 <DropdownMenu right>
                   <DropdownItem>Switch App</DropdownItem>
                   <DropdownItem divider />
+                  <DropdownItem>
+                    <Link to="/account">Account</Link>
+                  </DropdownItem>
                   <DropdownItem>Report Issue</DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>

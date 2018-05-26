@@ -1,12 +1,4 @@
 {
-  "id": "someIdentifier",
-  "companyName": "Test Store",
-  "settings": {
-    "replyEmail": "info@test.com",
-    "bccEmail": "",
-    "emailBody":
-      "Thank you for your order. Please click the link below to download your products."
-  },
   "products": {
     "id1": {
       "sku": "smp_1",

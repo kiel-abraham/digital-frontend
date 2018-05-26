@@ -6,7 +6,7 @@ import Dashboard from "./Dashboard";
 import Products from "./Products";
 import Orders from "./Orders";
 import Email from "./Email";
-import Settings from "./Settings";
+import Account from "./Account";
 
 const App = () => (
   <div>
@@ -19,7 +19,7 @@ const App = () => (
             <Route path="/products" component={Products} />
             <Route path="/orders" component={Orders} />
             <Route path="/email" component={Email} />
-            <Route path="/settings" component={Settings} />
+            <Route path="/account" component={Account} />
           </Switch>
           <footer className="mt-5">
             <hr />
