@@ -25,14 +25,14 @@ class Orders extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    this.productArray(newProps.orders);
+    this.orderArray(newProps.orders);
   }
 
   componentDidMount() {
-    this.productArray(this.props.orders);
+    this.orderArray(this.props.orders);
   }
 
-  productArray = value => {
+  orderArray = value => {
     let x = Object.keys(value).map((item, index) => {
       return value[item];
     });
@@ -60,7 +60,7 @@ class Orders extends React.Component {
         item.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
       );
     });
-    this.productArray(filtered);
+    this.orderArray(filtered);
   }
 
   render() {

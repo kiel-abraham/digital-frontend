@@ -11,3 +11,10 @@ export function deleteProduct(sku) {
     payload: sku
   };
 }
+
+export function updateProduct(product) {
+  return {
+    type: "UPDATE_PRODUCT",
+    payload: product
+  };
+}

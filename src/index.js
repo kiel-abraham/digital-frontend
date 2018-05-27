@@ -5,7 +5,6 @@ import { applyMiddleware, createStore } from "redux";
 import { Provider } from "react-redux";
 import { reducer } from "./reducer";
 import thunk from "redux-thunk";
-import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import App from "./components/App";
 import db from "./config";
@@ -14,24 +13,25 @@ const middleware = applyMiddleware(thunk);
 
 const store = createStore(reducer, middleware);
 
+const user = "user1";
+
 store.dispatch(dispatch => {
   db
-    .doc(`users/user1`)
+    .doc(`users/${user}`)
     .get()
     .then(function(doc) {
       if (doc.exists) {
-        dispatch({ type: "GET_COMPANY_NAME", payload: doc.data().companyName });
-        dispatch({ type: "GET_SETTINGS", payload: doc.data().email });
+        dispatch({ type: "GET_USER", payload: doc.data() });
       } else {
-        console.log("No such document!");
+        console.log("No such user!");
       }
     })
     .catch(function(error) {
-      console.log("Error getting document:", error);
+      console.log("Error getting user:", error);
     });
 
   db
-    .collection(`users/user1/orders`)
+    .collection(`users/${user}/orders`)
     .get()
     .then(querySnapshot => {
       const orders = [];
@@ -41,18 +41,29 @@ store.dispatch(dispatch => {
       dispatch({ type: "GET_ORDERS", payload: orders });
     });
 
-  axios
-    .get(
-      "https://raw.githubusercontent.com/kiel-abraham/digital-frontend/master/src/sample/config.json"
-    )
-    .then(response => {
-      dispatch({ type: "GET_PRODUCTS", payload: response.data.products });
-      // dispatch({ type: "GET_SETTINGS", payload: response.data.settings });
-      // dispatch({type: "GET_COMPANY_NAME",payload: response.data.companyName});
-    })
-    .catch(function(error) {
-      console.log("Error getting config data: ", error);
+  db
+    .collection(`users/${user}/products`)
+    .get()
+    .then(querySnapshot => {
+      const products = [];
+      querySnapshot.forEach(doc => {
+        products.push(doc.data());
+      });
+      dispatch({ type: "GET_PRODUCTS", payload: products });
     });
+
+  /*
+  db
+    .collection(`users/${user}/products`)
+    .doc("1527400927414")
+    .set(
+      {
+        sku: "test2",
+        name: "Update"
+      },
+      { merge: true }
+    );
+  */
 });
 
 render(

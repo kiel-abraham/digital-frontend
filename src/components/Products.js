@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { createProduct, deleteProduct } from "../actions";
+import { createProduct, deleteProduct, updateProduct } from "../actions";
 import ProductItems from "./ProductItems";
 import Note from "./Note";
 import {
@@ -24,7 +24,7 @@ class Products extends React.Component {
   constructor(props) {
     super(props);
     this.cancel = this.cancel.bind(this);
-    this.toggle = this.toggle.bind(this);
+    this.addModal = this.addModal.bind(this);
     this.edit = this.edit.bind(this);
     this.closeEdit = this.closeEdit.bind(this);
     this.handleEditSku = this.handleEditSku.bind(this);
@@ -35,6 +35,7 @@ class Products extends React.Component {
     this.handleSku = this.handleSku.bind(this);
     this.handleName = this.handleName.bind(this);
     this.handleFile = this.handleFile.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
     this.state = {
       modal: false,
       editModal: false,
@@ -43,6 +44,7 @@ class Products extends React.Component {
       noteColor: "",
       editSku: "",
       editName: "",
+      editId: "",
       skuValue: "",
       skuError: "",
       nameValue: "",
@@ -90,17 +92,19 @@ class Products extends React.Component {
     );
   }
 
-  toggle() {
+  addModal() {
     this.setState({
       modal: !this.state.modal
     });
   }
 
   edit(product) {
+    console.log(product);
     this.setState({
       editModal: !this.state.editModal,
       editSku: product[0],
-      editName: product[1]
+      editName: product[1],
+      editId: product[2]
     });
   }
 
@@ -116,6 +120,21 @@ class Products extends React.Component {
 
   handleEditName(e) {
     this.setState({ editName: e.target.value });
+  }
+
+  handleUpdate() {
+    console.log(this.state.editSku, this.state.editName, this.state.editId);
+    /*
+    this.props.updateProduct({
+      id: this.state.editId,
+      sku: this.state.editSku,
+      name: this.state.editName
+    });
+    */
+    this.setState({
+      editModal: !this.state.editModal
+    });
+    this.triggerNote("success", "Product updated");
   }
 
   handleDeleteProduct() {
@@ -208,7 +227,8 @@ class Products extends React.Component {
       this.state.fileError === ""
     ) {
       this.props.createProduct({
-        timeCreated: Date.now(),
+        id: Date.now().toString(),
+        timeCreated: new Date(),
         sku: this.state.skuValue,
         name: this.state.nameValue,
         fileName: this.state.fileName
@@ -253,7 +273,11 @@ class Products extends React.Component {
             </Form>
           </Col>
           <Col>
-            <Button color="info" className="float-right" onClick={this.toggle}>
+            <Button
+              color="info"
+              className="float-right"
+              onClick={this.addModal}
+            >
               Add Product
             </Button>
           </Col>
@@ -273,8 +297,10 @@ class Products extends React.Component {
             ))}
           </tbody>
         </Table>
-        <Modal isOpen={this.state.modal} toggle={this.toggle}>
-          <ModalHeader toggle={this.toggle}>Add Product</ModalHeader>
+        <Modal isOpen={this.state.modal} toggle={this.addModal}>
+          <ModalHeader toggle={this.addModal}>
+            {this.addModal ? "Add Product" : "Edit Product"}
+          </ModalHeader>
           <ModalBody>
             <Form>
               <FormGroup>
@@ -301,20 +327,22 @@ class Products extends React.Component {
                 />
                 <FormText color="danger">{this.state.nameError}</FormText>
               </FormGroup>
-              <FormGroup>
-                <Label for="file">File</Label>
-                <Input
-                  type="file"
-                  name="file"
-                  id="file"
-                  onChange={this.handleFile}
-                  accept="image/*, audio/*, video/*, text/plain, application/pdf"
-                />
-                <FormText color="muted">
-                  Max size 10MB. Accepted formats include .pdf .avi .mkv
-                </FormText>
-                <FormText color="danger">{this.state.fileError}</FormText>
-              </FormGroup>
+              {!this.state.addModal && (
+                <FormGroup>
+                  <Label for="file">File</Label>
+                  <Input
+                    type="file"
+                    name="file"
+                    id="file"
+                    onChange={this.handleFile}
+                    accept="image/*, audio/*, video/*, text/plain, application/pdf"
+                  />
+                  <FormText color="muted">
+                    Max size 10MB. Accepted formats include .pdf .avi .mkv
+                  </FormText>
+                  <FormText color="danger">{this.state.fileError}</FormText>
+                </FormGroup>
+              )}
             </Form>
           </ModalBody>
           <ModalFooter>
@@ -365,7 +393,7 @@ class Products extends React.Component {
             <Button outline color="secondary" onClick={this.closeEdit}>
               Cancel
             </Button>
-            <Button color="success" onClick={this.closeEdit}>
+            <Button color="success" onClick={this.handleUpdate}>
               Update
             </Button>
           </ModalFooter>
@@ -395,7 +423,8 @@ function mapDispatchToProps(dispatch) {
 */
 const mapDispatchToProps = {
   createProduct,
-  deleteProduct
+  deleteProduct,
+  updateProduct
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Products);

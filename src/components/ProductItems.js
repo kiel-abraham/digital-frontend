@@ -8,7 +8,7 @@ class ProductItem extends Component {
   }
 
   passProduct() {
-    this.props.parentToggle([this.props.sku, this.props.name]);
+    this.props.parentToggle([this.props.sku, this.props.name, this.props.id]);
   }
 
   render() {
