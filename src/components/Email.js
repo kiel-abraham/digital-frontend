@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { updateEmail } from "../actions";
 import Note from "./Note";
 import {
   Card,
@@ -64,6 +65,11 @@ class Email extends React.Component {
         noteMessage: "Please fix errors"
       });
     } else {
+      this.props.updateEmail({
+        replyEmail: this.state.newReply,
+        bccEmail: this.state.newBcc,
+        emailBody: this.state.newEmailBody
+      });
       this.setState({
         note: true,
         noteColor: "success",
@@ -225,4 +231,8 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(Email);
+const mapDispatchToProps = {
+  updateEmail
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Email);

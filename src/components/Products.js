@@ -24,11 +24,9 @@ class Products extends React.Component {
   constructor(props) {
     super(props);
     this.cancel = this.cancel.bind(this);
-    this.addModal = this.addModal.bind(this);
+    this.toggle = this.toggle.bind(this);
+    this.toggleAdd = this.toggleAdd.bind(this);
     this.edit = this.edit.bind(this);
-    this.closeEdit = this.closeEdit.bind(this);
-    this.handleEditSku = this.handleEditSku.bind(this);
-    this.handleEditName = this.handleEditName.bind(this);
     this.handleDeleteProduct = this.handleDeleteProduct.bind(this);
     this.filterProducts = this.filterProducts.bind(this);
     this.handleAdd = this.handleAdd.bind(this);
@@ -38,13 +36,12 @@ class Products extends React.Component {
     this.handleUpdate = this.handleUpdate.bind(this);
     this.state = {
       modal: false,
+      editing: false,
       editModal: false,
       note: true,
       noteMessage: "",
       noteColor: "",
-      editSku: "",
-      editName: "",
-      editId: "",
+      id: "",
       skuValue: "",
       skuError: "",
       nameValue: "",
@@ -92,55 +89,58 @@ class Products extends React.Component {
     );
   }
 
-  addModal() {
+  toggle() {
     this.setState({
       modal: !this.state.modal
     });
   }
 
+  toggleAdd() {
+    this.setState({
+      editing: false,
+      modal: !this.state.modal
+    });
+  }
+
   edit(product) {
-    console.log(product);
     this.setState({
-      editModal: !this.state.editModal,
-      editSku: product[0],
-      editName: product[1],
-      editId: product[2]
+      editing: true,
+      skuValue: product[0],
+      nameValue: product[1],
+      id: product[2],
+      modal: !this.state.modal
     });
-  }
-
-  closeEdit() {
-    this.setState({
-      editModal: !this.state.editModal
-    });
-  }
-
-  handleEditSku(e) {
-    this.setState({ editSku: e.target.value });
-  }
-
-  handleEditName(e) {
-    this.setState({ editName: e.target.value });
   }
 
   handleUpdate() {
-    console.log(this.state.editSku, this.state.editName, this.state.editId);
-    /*
-    this.props.updateProduct({
-      id: this.state.editId,
-      sku: this.state.editSku,
-      name: this.state.editName
-    });
-    */
-    this.setState({
-      editModal: !this.state.editModal
-    });
-    this.triggerNote("success", "Product updated");
+    if (this.state.skuValue === "") {
+      this.setState({ skuError: "Please enter a SKU" });
+    }
+    if (this.state.nameValue === "") {
+      this.setState({ nameError: "Please enter a name" });
+    }
+    let skuExists = this.checkSku(this.state.skuValue);
+    if (typeof skuExists !== "undefined") {
+      this.setState({ skuError: "SKU already exists" });
+      return;
+    }
+    if (this.state.skuValue !== "" && this.state.nameValue !== "") {
+      this.props.updateProduct({
+        id: this.state.id,
+        sku: this.state.skuValue,
+        name: this.state.nameValue
+      });
+      this.setState({
+        modal: !this.state.modal
+      });
+      this.triggerNote("success", "Product updated");
+    }
   }
 
   handleDeleteProduct() {
-    this.props.deleteProduct(this.state.editSku);
+    this.props.deleteProduct(this.state.editId);
     this.setState({
-      editModal: !this.state.editModal
+      modal: !this.state.modal
     });
     this.triggerNote("success", "Product deleted");
   }
@@ -276,7 +276,7 @@ class Products extends React.Component {
             <Button
               color="info"
               className="float-right"
-              onClick={this.addModal}
+              onClick={this.toggleAdd}
             >
               Add Product
             </Button>
@@ -297,9 +297,10 @@ class Products extends React.Component {
             ))}
           </tbody>
         </Table>
-        <Modal isOpen={this.state.modal} toggle={this.addModal}>
-          <ModalHeader toggle={this.addModal}>
-            {this.addModal ? "Add Product" : "Edit Product"}
+
+        <Modal isOpen={this.state.modal} toggle={this.toggle}>
+          <ModalHeader toggle={this.toggle}>
+            {this.state.editing ? "Edit Product" : "Add Product"}
           </ModalHeader>
           <ModalBody>
             <Form>
@@ -327,7 +328,7 @@ class Products extends React.Component {
                 />
                 <FormText color="danger">{this.state.nameError}</FormText>
               </FormGroup>
-              {!this.state.addModal && (
+              {!this.state.editing && (
                 <FormGroup>
                   <Label for="file">File</Label>
                   <Input
@@ -346,56 +347,28 @@ class Products extends React.Component {
             </Form>
           </ModalBody>
           <ModalFooter>
+            {this.state.editing && (
+              <Button
+                outline
+                color="danger"
+                className="mr-auto"
+                onClick={this.handleDeleteProduct}
+              >
+                Delete
+              </Button>
+            )}
             <Button outline color="secondary" onClick={this.cancel}>
               Cancel
             </Button>
-            <Button color="success" onClick={this.handleAdd}>
-              Add
-            </Button>
-          </ModalFooter>
-        </Modal>
-
-        <Modal isOpen={this.state.editModal} toggle={this.closeEdit}>
-          <ModalHeader toggle={this.closeEdit}>Edit Product</ModalHeader>
-          <ModalBody>
-            <Form>
-              <FormGroup>
-                <Label for="sku">SKU</Label>
-                <Input
-                  type="text"
-                  name="sku"
-                  id="sku"
-                  value={this.state.editSku}
-                  onChange={this.handleEditSku}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="name">Name</Label>
-                <Input
-                  type="text"
-                  name="name"
-                  id="name"
-                  value={this.state.editName}
-                  onChange={this.handleEditName}
-                />
-              </FormGroup>
-            </Form>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              outline
-              color="danger"
-              className="mr-auto"
-              onClick={this.handleDeleteProduct}
-            >
-              Delete
-            </Button>
-            <Button outline color="secondary" onClick={this.closeEdit}>
-              Cancel
-            </Button>
-            <Button color="success" onClick={this.handleUpdate}>
-              Update
-            </Button>
+            {this.state.editing ? (
+              <Button color="success" onClick={this.handleUpdate}>
+                Update
+              </Button>
+            ) : (
+              <Button color="success" onClick={this.handleAdd}>
+                Add
+              </Button>
+            )}
           </ModalFooter>
         </Modal>
       </div>

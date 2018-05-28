@@ -1,20 +1,98 @@
+import db from "./config";
+
+const user = "user1";
+const productCollection = `users/${user}/products`;
+
 export function createProduct(product) {
+  db
+    .collection(productCollection)
+    .doc(product.id)
+    .set({
+      id: product.id,
+      sku: product.sku,
+      name: product.name,
+      fileName: product.fileName,
+      fileId: 123456,
+      timeCreated: product.timeCreated
+    })
+    .then(function() {
+      console.log("Product added");
+    })
+    .catch(function(error) {
+      console.error("Error creating product: ", error);
+    });
+
   return {
     type: "CREATE_PRODUCT",
-    payload: product
-  };
-}
-
-export function deleteProduct(sku) {
-  return {
-    type: "DELETE_PRODUCT",
-    payload: sku
+    payload: {
+      id: product.id,
+      sku: product.sku,
+      name: product.name,
+      fileName: product.fileName,
+      fileId: 123456,
+      timeCreated: product.timeCreated
+    }
   };
 }
 
 export function updateProduct(product) {
+  db
+    .collection(productCollection)
+    .doc(product.id)
+    .update({
+      sku: product.sku,
+      name: product.name
+    })
+    .then(function() {
+      console.log("Product updated");
+    })
+    .catch(function(error) {
+      console.error("Error updating product: ", error);
+    });
+
   return {
     type: "UPDATE_PRODUCT",
-    payload: product
+    payload: {
+      id: product.id,
+      sku: product.sku,
+      name: product.name
+    }
   };
+}
+
+export function deleteProduct(id) {
+  db
+    .collection(productCollection)
+    .doc(id)
+    .delete()
+    .then(function() {
+      console.log("Product deleted");
+    })
+    .catch(function(error) {
+      console.error("Error deleting product: ", error);
+    });
+
+  return {
+    type: "DELETE_PRODUCT",
+    payload: id
+  };
+}
+
+export function updateEmail(email) {
+  db
+    .collection("users")
+    .doc(user)
+    .update({
+      email: {
+        replyEmail: email.replyEmail,
+        bccEmail: email.bccEmail,
+        emailBody: email.emailBody
+      }
+    })
+    .then(function() {
+      console.log("Email settings updated");
+    })
+    .catch(function(error) {
+      console.error("Error updating email: ", error);
+    });
 }
