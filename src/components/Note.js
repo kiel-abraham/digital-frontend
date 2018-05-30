@@ -6,7 +6,7 @@ const Note = props => {
     <Alert
       color={props.color}
       className="float-right fixed-bottom"
-      style={{ left: "auto", top: "auto" }}
+      style={{ left: "auto", top: "auto", right: "15px" }}
     >
       {props.message}
     </Alert>

@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { reactivateLink } from "../actions";
 import OrderItems from "./OrderItems";
 import {
   Table,
@@ -18,6 +19,7 @@ class Orders extends React.Component {
 
     this.toggle = this.toggle.bind(this);
     this.filterOrders = this.filterOrders.bind(this);
+    this.reactivateClicked = this.reactivateClicked.bind(this);
     this.state = {
       dropdownOpen: false,
       orders: []
@@ -30,6 +32,10 @@ class Orders extends React.Component {
 
   componentDidMount() {
     this.orderArray(this.props.orders);
+  }
+
+  reactivateClicked(id) {
+    this.props.reactivateLink(id);
   }
 
   orderArray = value => {
@@ -77,7 +83,7 @@ class Orders extends React.Component {
                   </Label>
                 </a>
                 <UncontrolledTooltip placement="top" target="help">
-                  Search using OrderId, SKU or Name
+                  Search using Order #, SKU or Name
                 </UncontrolledTooltip>
                 <Input
                   type="search"
@@ -103,7 +109,11 @@ class Orders extends React.Component {
           </thead>
           <tbody>
             {Object.keys(this.state.orders).map((item, index) => (
-              <OrderItems key={index} {...this.state.orders[item]} />
+              <OrderItems
+                key={index}
+                parentToggle={this.reactivateClicked}
+                {...this.state.orders[item]}
+              />
             ))}
           </tbody>
         </Table>
@@ -118,4 +128,8 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(Orders);
+const mapDispatchToProps = {
+  reactivateLink
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Orders);

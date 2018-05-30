@@ -12,8 +12,27 @@ export function reducer(state = {}, action) {
       };
       break;
 
+    case "UPDATE_EMAIL":
+      return { ...state, settings: action.payload };
+      break;
+
     case "GET_ORDERS":
       return { ...state, orders: action.payload };
+      break;
+
+    case "UPDATE_LINK":
+      return {
+        ...state,
+        orders: state.orders.map(
+          item =>
+            item.orderId === action.payload
+              ? {
+                  ...item,
+                  active: true
+                }
+              : item
+        )
+      };
       break;
 
     case "CREATE_PRODUCT":

@@ -11,9 +11,14 @@ class OrderItem extends Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
+    this.reactivate = this.reactivate.bind(this);
     this.state = {
       dropdownOpen: false
     };
+  }
+
+  reactivate() {
+    this.props.parentToggle(this.props.orderId);
   }
 
   toggle() {
@@ -43,7 +48,9 @@ class OrderItem extends Component {
                 Expired
               </DropdownToggle>
               <DropdownMenu>
-                <DropdownItem>Reactivate</DropdownItem>
+                <DropdownItem onClick={this.reactivate}>
+                  Reactivate
+                </DropdownItem>
               </DropdownMenu>
             </ButtonDropdown>
           )}

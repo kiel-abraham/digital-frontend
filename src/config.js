@@ -1,5 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
+import "firebase/storage";
 
 var config = {
   // testing db
@@ -11,6 +12,19 @@ var config = {
   messagingSenderId: "910813321602"
 };
 
+var app = !firebase.apps.length
+  ? firebase.initializeApp(config)
+  : firebase.app();
+
+console.log(app);
+
+var storage = app.storage();
+var firestore = app.firestore();
+
+export { storage, firestore };
+
+/*
 export default (!firebase.apps.length
   ? firebase.initializeApp(config).firestore()
   : firebase.app().firestore());
+*/

@@ -32,26 +32,39 @@ class Email extends React.Component {
       note: false,
       noteColor: "",
       noteMessage: "",
-      newBcc: this.props.settings.bccEmail,
-      newReply: this.props.settings.replyEmail,
-      newEmailBody: this.props.settings.emailBody,
+      newBcc: "",
+      newReply: "",
+      newEmailBody: "",
       replyError: "",
       bccEmail: ""
     };
   }
 
+  componentWillReceiveProps(newProps) {
+    this.setState({
+      newBcc: newProps.settings.bccEmail,
+      newReply: newProps.settings.replyEmail,
+      newEmailBody: newProps.settings.emailBody
+    });
+  }
+
+  componentDidMount() {
+    this.setState({
+      newBcc: this.props.settings.bccEmail,
+      newReply: this.props.settings.replyEmail,
+      newEmailBody: this.props.settings.emailBody
+    });
+  }
+
   handleReply(e) {
-    console.log(e.target.value);
     this.setState({ newReply: e.target.value, replyError: "" });
   }
 
   handleBcc(e) {
-    console.log(e.target.value);
     this.setState({ newBcc: e.target.value });
   }
 
   handleEmailBody(e) {
-    console.log(e.target.value);
     this.setState({ newEmailBody: e.target.value });
   }
 
@@ -108,7 +121,7 @@ class Email extends React.Component {
                       <Input
                         type="text"
                         name="subject"
-                        placeholder="Company name - order.number product downloads"
+                        placeholder="Company Name - {{order.number}} digital download"
                         disabled
                       />
                     </InputGroup>
@@ -121,7 +134,7 @@ class Email extends React.Component {
                       <Input
                         type="email"
                         name="toEmail"
-                        placeholder="customer.email"
+                        placeholder="{{customer.email}}"
                         disabled
                       />
                     </InputGroup>
@@ -159,9 +172,11 @@ class Email extends React.Component {
                 </CardHeader>
                 <CardBody>
                   <CardText>
-                    <p>
-                      Dear <Badge color="secondary">customer.firstName</Badge>,
-                    </p>
+                    <div>
+                      <p>
+                        Dear <Badge color="secondary">customer.firstName</Badge>,
+                      </p>
+                    </div>
                     <br />
                     <div>
                       <FormGroup>
@@ -183,7 +198,7 @@ class Email extends React.Component {
                         </thead>
                         <tbody>
                           <tr>
-                            <td scope="row">
+                            <td>
                               <Badge color="secondary">product.sku</Badge>
                             </td>
                             <td>
@@ -199,13 +214,16 @@ class Email extends React.Component {
                       </Table>
                       <br />
                       <br />
-                      <p>Regards,</p>
+                      <div>
+                        <p>Regards,</p>
+                      </div>
                     </div>
                   </CardText>
                   <Col xs="3" className="pl-0">
                     <img
                       className="mb-3"
-                      src="https://www.riffsandlicks.com.au/assets/pdf_logo.gif"
+                      alt="email logo"
+                      src="https://kiels-guitars.staging-aws.neto.net.au/assets/pdf_logo.gif"
                     />
                   </Col>
                 </CardBody>

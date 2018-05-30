@@ -1,7 +1,9 @@
-import db from "./config";
+import { firestore } from "./config";
+const db = firestore;
 
 const user = "user1";
 const productCollection = `users/${user}/products`;
+const orderCollection = `users/${user}/orders`;
 
 export function createProduct(product) {
   db
@@ -95,4 +97,32 @@ export function updateEmail(email) {
     .catch(function(error) {
       console.error("Error updating email: ", error);
     });
+
+  return {
+    type: "UPDATE_EMAIL",
+    payload: {
+      replyEmail: email.replyEmail,
+      bccEmail: email.bccEmail,
+      emailBody: email.emailBody
+    }
+  };
+}
+
+export function reactivateLink(orderId) {
+  db
+    .collection(orderCollection)
+    .doc(orderId)
+    .update({
+      active: true
+    })
+    .then(function() {
+      console.log("Order updated");
+    })
+    .catch(function(error) {
+      console.error("Error updating order: ", error);
+    });
+  return {
+    type: "UPDATE_LINK",
+    payload: orderId
+  };
 }

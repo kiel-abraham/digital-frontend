@@ -1,4 +1,5 @@
 import React from "react";
+import { storage } from "../config";
 import { connect } from "react-redux";
 import { createProduct, deleteProduct, updateProduct } from "../actions";
 import ProductItems from "./ProductItems";
@@ -13,6 +14,7 @@ import {
   FormText,
   Label,
   Input,
+  Progress,
   UncontrolledTooltip,
   Modal,
   ModalHeader,
@@ -37,7 +39,6 @@ class Products extends React.Component {
     this.state = {
       modal: false,
       editing: false,
-      editModal: false,
       note: true,
       noteMessage: "",
       noteColor: "",
@@ -49,6 +50,7 @@ class Products extends React.Component {
       fileName: "",
       fileSize: 0,
       fileError: "",
+      progress: 0,
       productList: []
     };
   }
@@ -119,10 +121,12 @@ class Products extends React.Component {
     if (this.state.nameValue === "") {
       this.setState({ nameError: "Please enter a name" });
     }
-    let skuExists = this.checkSku(this.state.skuValue);
-    if (typeof skuExists !== "undefined") {
-      this.setState({ skuError: "SKU already exists" });
-      return;
+    if (true) {
+      let skuExists = this.checkSku(this.state.skuValue);
+      if (typeof skuExists !== "undefined") {
+        this.setState({ skuError: "SKU already exists" });
+        return;
+      }
     }
     if (this.state.skuValue !== "" && this.state.nameValue !== "") {
       this.props.updateProduct({
@@ -131,6 +135,11 @@ class Products extends React.Component {
         name: this.state.nameValue
       });
       this.setState({
+        skuValue: "",
+        nameValue: "",
+        skuError: "",
+        nameError: "",
+        fileError: "",
         modal: !this.state.modal
       });
       this.triggerNote("success", "Product updated");
@@ -138,8 +147,13 @@ class Products extends React.Component {
   }
 
   handleDeleteProduct() {
-    this.props.deleteProduct(this.state.editId);
+    this.props.deleteProduct(this.state.id);
     this.setState({
+      skuValue: "",
+      nameValue: "",
+      skuError: "",
+      nameError: "",
+      fileError: "",
       modal: !this.state.modal
     });
     this.triggerNote("success", "Product deleted");
@@ -152,6 +166,7 @@ class Products extends React.Component {
       skuError: "",
       nameError: "",
       fileError: "",
+      progress: 0,
       modal: !this.state.modal
     });
   }
@@ -165,6 +180,19 @@ class Products extends React.Component {
       this.setState({ fileError: "Upload limit is 10MB" });
     } else {
       this.setState({ fileError: "" });
+      const ref = storage.ref();
+      const file = e.target.files[0];
+      const name = ref.child("user1/" + e.target.files[0].name);
+      const uploadTask = name.put(file);
+      uploadTask.on("state_changed", snapshot => {
+        let progress = snapshot.bytesTransferred / snapshot.totalBytes * 100;
+        this.setState({
+          progress: progress
+        });
+      });
+      uploadTask.then(function(snapshot) {
+        console.log("File uploaded");
+      });
     }
   }
 
@@ -193,10 +221,14 @@ class Products extends React.Component {
   }
 
   checkSku(sku) {
-    let x = this.state.productList.find(function(element) {
-      return element.sku === sku;
-    });
-    return x;
+    if (this.state.editing) {
+      let notCurrent = this.state.productList.filter(
+        item => item.id !== this.state.id
+      );
+      return notCurrent.find(x => x.sku === sku);
+    } else {
+      return this.state.productList.find(x => x.sku === sku);
+    }
   }
 
   handleAdd() {
@@ -237,6 +269,7 @@ class Products extends React.Component {
       this.setState({
         skuValue: "",
         nameValue: "",
+        progress: 0,
         modal: !this.state.modal
       });
     }
@@ -342,6 +375,7 @@ class Products extends React.Component {
                     Max size 10MB. Accepted formats include .pdf .avi .mkv
                   </FormText>
                   <FormText color="danger">{this.state.fileError}</FormText>
+                  <Progress animated color="info" value={this.state.progress} />
                 </FormGroup>
               )}
             </Form>

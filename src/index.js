@@ -7,12 +7,12 @@ import { reducer } from "./reducer";
 import thunk from "redux-thunk";
 import "bootstrap/dist/css/bootstrap.min.css";
 import App from "./components/App";
-import db from "./config";
+import { firestore } from "./config";
 
 const middleware = applyMiddleware(thunk);
-
 const store = createStore(reducer, middleware);
 
+const db = firestore;
 const user = "user1";
 
 store.dispatch(dispatch => {
