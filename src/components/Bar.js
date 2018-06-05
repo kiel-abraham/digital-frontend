@@ -8,7 +8,6 @@ import {
   NavbarBrand,
   Nav,
   NavItem,
-  NavLink,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
@@ -34,7 +33,7 @@ class Bar extends React.Component {
     return (
       <div>
         <Navbar color="dark" dark expand="md">
-          <NavbarBrand href="/">{this.props.companyName}</NavbarBrand>
+          <NavbarBrand>{this.props.companyName}</NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav navbar>
@@ -65,12 +64,17 @@ class Bar extends React.Component {
                   Digital Downloads
                 </DropdownToggle>
                 <DropdownMenu right>
-                  <DropdownItem>Switch App</DropdownItem>
-                  <DropdownItem divider />
                   <DropdownItem>
                     <Link to="/account">Account</Link>
                   </DropdownItem>
                   <DropdownItem>Report Issue</DropdownItem>
+                  <DropdownItem divider />
+                  <DropdownItem>
+                    <Link to="/login">Login</Link>
+                  </DropdownItem>
+                  <DropdownItem>
+                    <Link to="/logout">Logout</Link>
+                  </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
             </Nav>

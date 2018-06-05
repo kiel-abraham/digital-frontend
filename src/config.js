@@ -1,9 +1,9 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/storage";
+import "firebase/auth";
 
 var config = {
-  // testing db
   apiKey: "AIzaSyBVdq4HDOkzINT5TmYwlMPxaI5bJ4FhnN8",
   authDomain: "kiel-test-app.firebaseapp.com",
   databaseURL: "https://kiel-test-app.firebaseio.com",
@@ -16,15 +16,8 @@ var app = !firebase.apps.length
   ? firebase.initializeApp(config)
   : firebase.app();
 
-console.log(app);
-
 var storage = app.storage();
 var firestore = app.firestore();
+var auth = app.auth();
 
-export { storage, firestore };
-
-/*
-export default (!firebase.apps.length
-  ? firebase.initializeApp(config).firestore()
-  : firebase.app().firestore());
-*/
+export { storage, firestore, auth };

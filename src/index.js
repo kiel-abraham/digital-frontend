@@ -12,11 +12,10 @@ import { firestore } from "./config";
 const middleware = applyMiddleware(thunk);
 const store = createStore(reducer, middleware);
 
-const db = firestore;
 const user = "user1";
 
 store.dispatch(dispatch => {
-  db
+  firestore
     .doc(`users/${user}`)
     .get()
     .then(function(doc) {
@@ -30,7 +29,7 @@ store.dispatch(dispatch => {
       console.log("Error getting user:", error);
     });
 
-  db
+  firestore
     .collection(`users/${user}/orders`)
     .get()
     .then(querySnapshot => {
@@ -41,7 +40,7 @@ store.dispatch(dispatch => {
       dispatch({ type: "GET_ORDERS", payload: orders });
     });
 
-  db
+  firestore
     .collection(`users/${user}/products`)
     .get()
     .then(querySnapshot => {
@@ -51,19 +50,6 @@ store.dispatch(dispatch => {
       });
       dispatch({ type: "GET_PRODUCTS", payload: products });
     });
-
-  /*
-  db
-    .collection(`users/${user}/products`)
-    .doc("1527400927414")
-    .set(
-      {
-        sku: "test2",
-        name: "Update"
-      },
-      { merge: true }
-    );
-  */
 });
 
 render(

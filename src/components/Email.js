@@ -102,6 +102,9 @@ class Email extends React.Component {
   }
 
   render() {
+    const subject = `${
+      this.props.companyName
+    } - {{order.number}} digital download`;
     return (
       <div>
         {this.state.note && (
@@ -114,14 +117,16 @@ class Email extends React.Component {
               <Card>
                 <CardHeader>
                   <FormGroup>
+                    <p>{this.props.companyName}</p>
                     <InputGroup>
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText>Subject</InputGroupText>
                       </InputGroupAddon>
+
                       <Input
                         type="text"
                         name="subject"
-                        placeholder="Company Name - {{order.number}} digital download"
+                        placeholder={subject}
                         disabled
                       />
                     </InputGroup>
@@ -245,6 +250,7 @@ class Email extends React.Component {
 
 function mapStateToProps(state) {
   return {
+    companyName: state.companyName,
     settings: { ...state.settings }
   };
 }

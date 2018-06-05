@@ -1,9 +1,5 @@
 export function reducer(state = {}, action) {
   switch (action.type) {
-    case "GET_PRODUCTS":
-      return { ...state, products: action.payload };
-      break;
-
     case "GET_USER":
       return {
         ...state,
@@ -33,6 +29,10 @@ export function reducer(state = {}, action) {
               : item
         )
       };
+      break;
+
+    case "GET_PRODUCTS":
+      return { ...state, products: action.payload };
       break;
 
     case "CREATE_PRODUCT":

@@ -1,12 +1,15 @@
 import { firestore } from "./config";
-const db = firestore;
 
-const user = "user1";
+let user = "user1";
 const productCollection = `users/${user}/products`;
 const orderCollection = `users/${user}/orders`;
 
+export function storeInUse(user) {
+  return { user };
+}
+
 export function createProduct(product) {
-  db
+  firestore
     .collection(productCollection)
     .doc(product.id)
     .set({
@@ -38,7 +41,7 @@ export function createProduct(product) {
 }
 
 export function updateProduct(product) {
-  db
+  firestore
     .collection(productCollection)
     .doc(product.id)
     .update({
@@ -63,7 +66,7 @@ export function updateProduct(product) {
 }
 
 export function deleteProduct(id) {
-  db
+  firestore
     .collection(productCollection)
     .doc(id)
     .delete()
@@ -81,7 +84,7 @@ export function deleteProduct(id) {
 }
 
 export function updateEmail(email) {
-  db
+  firestore
     .collection("users")
     .doc(user)
     .update({
@@ -109,7 +112,7 @@ export function updateEmail(email) {
 }
 
 export function reactivateLink(orderId) {
-  db
+  firestore
     .collection(orderCollection)
     .doc(orderId)
     .update({
