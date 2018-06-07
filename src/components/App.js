@@ -1,7 +1,9 @@
 import React from "react";
 import { Container, Row, Col } from "reactstrap";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route, Redirect, withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 import { auth } from "../config";
+import { getInfo, getProducts, getOrders } from "../actions";
 import Bar from "./Bar";
 import Dashboard from "./Dashboard";
 import Products from "./Products";
@@ -32,6 +34,9 @@ class App extends React.Component {
     this.removeListener = auth.onAuthStateChanged(user => {
       if (user) {
         this.setState({ loggedIn: true });
+        this.props.getOrders(this.props.storeName);
+        this.props.getProducts(this.props.storeName);
+        this.props.getInfo(this.props.storeName);
       } else {
         this.setState({ loggedIn: false });
       }
@@ -91,4 +96,16 @@ class App extends React.Component {
   }
 }
 
-export default App;
+function mapStateToProps(state) {
+  return {
+    storeName: state.storeName
+  };
+}
+
+const mapDispatchToProps = {
+  getInfo,
+  getProducts,
+  getOrders
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

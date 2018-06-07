@@ -1,6 +1,13 @@
 export function reducer(state = {}, action) {
   switch (action.type) {
-    case "GET_USER":
+    case "SET_STORE_NAME":
+      return {
+        ...state,
+        storeName: action.payload
+      };
+      break;
+
+    case "GET_STORE":
       return {
         ...state,
         companyName: action.payload.companyName,

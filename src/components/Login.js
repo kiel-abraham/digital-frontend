@@ -1,6 +1,7 @@
 import React from "react";
+import { connect } from "react-redux";
 import { auth } from "../config";
-import { storeInUse } from "../actions";
+import { setStoreName } from "../actions";
 import { Form, FormGroup, Label, Input, Button } from "reactstrap";
 
 class Login extends React.Component {
@@ -33,7 +34,7 @@ class Login extends React.Component {
     auth
       .signInWithEmailAndPassword(this.state.email, this.state.password)
       .then(message => {
-        storeInUse(this.state.store);
+        this.props.setStoreName(this.state.store);
       })
       .catch(error => {
         console.log(error.code, error.message);
@@ -87,4 +88,8 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+const mapDispatchToProps = {
+  setStoreName
+};
+
+export default connect(null, mapDispatchToProps)(Login);

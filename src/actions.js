@@ -1,16 +1,89 @@
 import { firestore } from "./config";
 
-let user = "user1";
-const productCollection = `users/${user}/products`;
-const orderCollection = `users/${user}/orders`;
-
-export function storeInUse(user) {
-  return { user };
+export function setStoreName(storeName) {
+  return {
+    type: "SET_STORE_NAME",
+    payload: storeName
+  };
 }
 
-export function createProduct(product) {
-  firestore
-    .collection(productCollection)
+export function getInfo(storeName) {
+  const request = firestore
+    .doc(`users/${storeName}`)
+    .get()
+    .catch(function(error) {
+      console.log("Error getting user:", error);
+    });
+
+  return dispatch => {
+    request.then(doc => {
+      if (doc.exists) {
+        dispatch({
+          type: "GET_STORE",
+          payload: doc.data()
+        });
+      } else {
+        firestore.doc(`users/${storeName}`).set({
+          companyName: storeName,
+          email: {
+            bccEmail: "",
+            emailBody: "",
+            replyEmail: "",
+            id: storeName
+          }
+        });
+        dispatch({
+          type: "GET_STORE",
+          payload: {
+            companyName: storeName,
+            email: {
+              bccEmail: "",
+              emailBody: "",
+              replyEmail: "",
+              id: storeName
+            }
+          }
+        });
+      }
+    });
+  };
+}
+
+export function getOrders(storeName) {
+  const request = firestore.collection(`users/${storeName}/orders`).get();
+  return dispatch => {
+    request.then(querySnapshot => {
+      const orders = [];
+      querySnapshot.forEach(doc => {
+        orders.push(doc.data());
+      });
+      dispatch({
+        type: "GET_ORDERS",
+        payload: orders
+      });
+    });
+  };
+}
+
+export function getProducts(storeName) {
+  const request = firestore.collection(`users/${storeName}/products`).get();
+  return dispatch => {
+    request.then(querySnapshot => {
+      const products = [];
+      querySnapshot.forEach(doc => {
+        products.push(doc.data());
+      });
+      dispatch({
+        type: "GET_PRODUCTS",
+        payload: products
+      });
+    });
+  };
+}
+
+export function createProduct(storeName, product) {
+  const request = firestore
+    .collection(`users/${storeName}/products`)
     .doc(product.id)
     .set({
       id: product.id,
@@ -20,73 +93,79 @@ export function createProduct(product) {
       fileId: 123456,
       timeCreated: product.timeCreated
     })
-    .then(function() {
-      console.log("Product added");
-    })
     .catch(function(error) {
       console.error("Error creating product: ", error);
     });
 
-  return {
-    type: "CREATE_PRODUCT",
-    payload: {
-      id: product.id,
-      sku: product.sku,
-      name: product.name,
-      fileName: product.fileName,
-      fileId: 123456,
-      timeCreated: product.timeCreated
-    }
+  return dispatch => {
+    request.then(() => {
+      dispatch({
+        type: "CREATE_PRODUCT",
+        payload: {
+          id: product.id,
+          sku: product.sku,
+          name: product.name,
+          fileName: product.fileName,
+          fileId: 123456,
+          timeCreated: product.timeCreated
+        }
+      });
+    });
   };
 }
 
-export function updateProduct(product) {
-  firestore
-    .collection(productCollection)
+export function updateProduct(storeName, product) {
+  const request = firestore
+    .collection(`users/${storeName}/products`)
     .doc(product.id)
     .update({
       sku: product.sku,
       name: product.name
     })
-    .then(function() {
-      console.log("Product updated");
-    })
     .catch(function(error) {
       console.error("Error updating product: ", error);
     });
 
-  return {
-    type: "UPDATE_PRODUCT",
-    payload: {
-      id: product.id,
-      sku: product.sku,
-      name: product.name
-    }
+  return dispatch => {
+    request.then(() => {
+      dispatch({
+        type: "UPDATE_PRODUCT",
+        payload: {
+          id: product.id,
+          sku: product.sku,
+          name: product.name
+        }
+      });
+    });
   };
 }
 
-export function deleteProduct(id) {
-  firestore
-    .collection(productCollection)
+export function deleteProduct(storeName, id) {
+  const request = firestore
+    .collection(`users/${storeName}/products`)
     .doc(id)
     .delete()
-    .then(function() {
+    .then(() => {
       console.log("Product deleted");
     })
-    .catch(function(error) {
+    .catch(error => {
       console.error("Error deleting product: ", error);
     });
 
-  return {
-    type: "DELETE_PRODUCT",
-    payload: id
+  return dispatch => {
+    request.then(() => {
+      dispatch({
+        type: "DELETE_PRODUCT",
+        payload: id
+      });
+    });
   };
 }
 
-export function updateEmail(email) {
-  firestore
+export function updateEmail(storeName, email) {
+  const request = firestore
     .collection("users")
-    .doc(user)
+    .doc(storeName)
     .update({
       email: {
         replyEmail: email.replyEmail,
@@ -94,38 +173,41 @@ export function updateEmail(email) {
         emailBody: email.emailBody
       }
     })
-    .then(function() {
-      console.log("Email settings updated");
-    })
     .catch(function(error) {
       console.error("Error updating email: ", error);
     });
 
-  return {
-    type: "UPDATE_EMAIL",
-    payload: {
-      replyEmail: email.replyEmail,
-      bccEmail: email.bccEmail,
-      emailBody: email.emailBody
-    }
+  return dispatch => {
+    request.then(() => {
+      dispatch({
+        type: "UPDATE_EMAIL",
+        payload: {
+          replyEmail: email.replyEmail,
+          bccEmail: email.bccEmail,
+          emailBody: email.emailBody
+        }
+      });
+    });
   };
 }
 
-export function reactivateLink(orderId) {
-  firestore
-    .collection(orderCollection)
+export function reactivateLink(storeName, orderId) {
+  const request = firestore
+    .collection(`users/${storeName}/orders`)
     .doc(orderId)
     .update({
       active: true
     })
-    .then(function() {
-      console.log("Order updated");
-    })
     .catch(function(error) {
       console.error("Error updating order: ", error);
     });
-  return {
-    type: "UPDATE_LINK",
-    payload: orderId
+
+  return dispatch => {
+    request.then(() => {
+      dispatch({
+        type: "UPDATE_LINK",
+        payload: orderId
+      });
+    });
   };
 }

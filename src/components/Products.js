@@ -129,7 +129,7 @@ class Products extends React.Component {
       }
     }
     if (this.state.skuValue !== "" && this.state.nameValue !== "") {
-      this.props.updateProduct({
+      this.props.updateProduct(this.props.storeName, {
         id: this.state.id,
         sku: this.state.skuValue,
         name: this.state.nameValue
@@ -147,7 +147,7 @@ class Products extends React.Component {
   }
 
   handleDeleteProduct() {
-    this.props.deleteProduct(this.state.id);
+    this.props.deleteProduct(this.props.storeName, this.state.id);
     this.setState({
       skuValue: "",
       nameValue: "",
@@ -182,7 +182,9 @@ class Products extends React.Component {
       this.setState({ fileError: "" });
       const ref = storage.ref();
       const file = e.target.files[0];
-      const name = ref.child("user1/" + e.target.files[0].name);
+      const name = ref.child(
+        this.props.storeName + "/" + e.target.files[0].name
+      );
       const uploadTask = name.put(file);
       uploadTask.on("state_changed", snapshot => {
         let progress = snapshot.bytesTransferred / snapshot.totalBytes * 100;
@@ -258,7 +260,7 @@ class Products extends React.Component {
       this.state.nameError === "" &&
       this.state.fileError === ""
     ) {
-      this.props.createProduct({
+      this.props.createProduct(this.props.storeName, {
         id: Date.now().toString(),
         timeCreated: new Date(),
         sku: this.state.skuValue,
@@ -410,24 +412,13 @@ class Products extends React.Component {
   }
 }
 
-/*
-function mapStateToProps(state) {
-   return {
-     products: { ...state.products }
-   };
- }
-*/
 const mapStateToProps = state => {
   return {
+    storeName: state.storeName,
     products: { ...state.products }
   };
 };
 
-/*
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(actions, dispatch);
-}
-*/
 const mapDispatchToProps = {
   createProduct,
   deleteProduct,

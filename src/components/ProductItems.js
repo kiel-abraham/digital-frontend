@@ -14,7 +14,7 @@ class ProductItem extends Component {
   render() {
     return (
       <tr>
-        <td scope="row">{this.props.sku}</td>
+        <td>{this.props.sku}</td>
         <td>{this.props.name}</td>
         <td>{this.props.fileName}</td>
         <td>

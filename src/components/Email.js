@@ -69,7 +69,6 @@ class Email extends React.Component {
   }
 
   saveEmail(e) {
-    //e.preventDefault();
     if (this.state.newReply === "") {
       this.setState({
         replyError: "Reply email is required",
@@ -78,7 +77,7 @@ class Email extends React.Component {
         noteMessage: "Please fix errors"
       });
     } else {
-      this.props.updateEmail({
+      this.props.updateEmail(this.props.storeName, {
         replyEmail: this.state.newReply,
         bccEmail: this.state.newBcc,
         emailBody: this.state.newEmailBody
@@ -102,9 +101,7 @@ class Email extends React.Component {
   }
 
   render() {
-    const subject = `${
-      this.props.companyName
-    } - {{order.number}} digital download`;
+    const subject = `${this.props.companyName} - order.number digital download`;
     return (
       <div>
         {this.state.note && (
@@ -139,7 +136,7 @@ class Email extends React.Component {
                       <Input
                         type="email"
                         name="toEmail"
-                        placeholder="{{customer.email}}"
+                        placeholder="customer.email"
                         disabled
                       />
                     </InputGroup>
@@ -250,6 +247,7 @@ class Email extends React.Component {
 
 function mapStateToProps(state) {
   return {
+    storeName: state.storeName,
     companyName: state.companyName,
     settings: { ...state.settings }
   };

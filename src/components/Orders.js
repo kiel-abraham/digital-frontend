@@ -35,7 +35,7 @@ class Orders extends React.Component {
   }
 
   reactivateClicked(id) {
-    this.props.reactivateLink(id);
+    this.props.reactivateLink(this.props.storeName, id);
   }
 
   orderArray = value => {
@@ -124,6 +124,7 @@ class Orders extends React.Component {
 
 const mapStateToProps = state => {
   return {
+    storeName: state.storeName,
     orders: { ...state.orders }
   };
 };
